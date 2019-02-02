@@ -14,7 +14,7 @@ import createRoutes from './utils/createRoutes';
 
 const cache = new InMemoryCache();
 
-const GITHUB_BASE_URL = 'http://localhost:8080/';
+const GITHUB_BASE_URL = 'http://localhost:8080/graphql';
 
 const httpLink = new HttpLink({
   uri: GITHUB_BASE_URL,
