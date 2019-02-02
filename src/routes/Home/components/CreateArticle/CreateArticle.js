@@ -38,7 +38,6 @@ const MUTATION_DELETE_ARTICLE = gql`
 
 export const CreateArticle = (props) => {
   let input;
-  console.log(props);
   return (
     <div>
       <form
