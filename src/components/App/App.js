@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // Providers
 import { ApolloProvider } from 'react-apollo';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter } from 'react-router-dom';
 // Components
@@ -17,7 +17,7 @@ export const App = ({
   layout, ...rest
 }) => (
   <ApolloProvider client={client}>
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <Switch>
@@ -40,7 +40,7 @@ export const App = ({
           )))}
         </Switch>
       </BrowserRouter>
-    </MuiThemeProvider>
+    </ThemeProvider>
   </ApolloProvider>
 );
 
