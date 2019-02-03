@@ -1,9 +1,7 @@
 export default theme => ({
   root: {
-    display: 'flex',
-    flexFlow: 'row',
-    listStyle: 'none',
-    padding: 0,
+    paddingLeft: theme.spacing.unit * 4,
+    paddingRight: theme.spacing.unit * 4,
   },
   link: {
     textTransform: 'uppercase',

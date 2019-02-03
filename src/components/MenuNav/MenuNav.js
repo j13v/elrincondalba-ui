@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import classNames from 'classnames';
-import Link from '../Link';
+import MenuNavItem from './MenuNavItem';
 import styles from './MenuNav.style';
 
 
@@ -13,20 +12,14 @@ export const MenuNav = ({navs, ...restProps}) => {
   return (
     <ul className={classes.root}>
       {navs.map(({link, name, active}, idx) => (
-        <li key={idx} className={classNames(classes.nav, {[classes.active]: active})}>
-          <Link to={link} className={classes.link}>{name}</Link>
-        </li>
+        <MenuNavItem key={idx} link={link} name={name} active={active} />
       ))}
     </ul>
   );
 };
 
 MenuNav.propTypes = {
-  navs: PropTypes.arrayOf(PropTypes.shape({
-    active: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
-    link: PropTypes.string.isRequired,
-  })),
+  navs: PropTypes.arrayOf(PropTypes.object),
 };
 
 MenuNav.defaultProps = {
