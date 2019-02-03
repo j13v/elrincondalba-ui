@@ -18,26 +18,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IconStarBorder from '@material-ui/icons/StarBorder';
-import IconStar from '@material-ui/icons/Star';
-
-const GET_ARTICLES = gql`
-{
-  listArticles(last: 20) {
-    edges {
-      node {
-        id
-        name
-        description
-        images
-        price
-        category
-        rating
-      }
-    }
-  }
-}
-`;
+import RatingStars from '../../../../components/RatingStars';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -103,7 +84,7 @@ export const ArticleTile = ({article, loading}) => {
         <Typography component="p">
           {article.description}
         </Typography>
-        {(new Array(5).fill(null)).map((_, idx) => (article.rating <= idx ? <IconStarBorder key={idx} /> : <IconStar key={idx} />))}
+        <RatingStars value={article.rating} />
         <p>{article.price}</p>
       </CardContent>
       <CardActions className={classes.actions} disableActionSpacing>
@@ -155,8 +136,4 @@ ArticleTile.propTypes = {
 };
 
 
-const flattenConnectionEdges = (data, loading) => (data && loading === false ? data.edges.map(edge => edge.node) : {edges: []});
-
-const mapQueryToProps = ({data: {loading, listArticles}}) => ({articles: flattenConnectionEdges(listArticles, loading), loading: false});
-
-export default graphql(GET_ARTICLES, {props: mapQueryToProps})(ArticleTile);
+export default ArticleTile;

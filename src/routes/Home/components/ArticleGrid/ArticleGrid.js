@@ -5,7 +5,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
-import { ArticleTile } from '../ArticleTile/ArticleTile';
+import ArticleTile from '../ArticleTile';
 
 const styles = theme => ({
   root: {
