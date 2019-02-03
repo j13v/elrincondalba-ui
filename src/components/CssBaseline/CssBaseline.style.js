@@ -26,9 +26,3 @@ export default theme => ({
     },
   },
 });
-
-// [{
-//   '"font-family"': 'Montserrat',
-//   src: `url("${FontMonserratBold}") format("woff2")`,
-//   '"font-weight"': '700',
-// }],
