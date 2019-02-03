@@ -5,13 +5,4 @@ export default theme => ({
     listStyle: 'none',
     padding: 0,
   },
-  link: {
-    textTransform: 'uppercase',
-    fontWeight: 100,
-  },
-  active: {
-    '& $link': {
-      color: '#ad8b60',
-    },
-  },
 });
