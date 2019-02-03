@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 // Providers
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter } from 'react-router-dom';
 // Components
 import { Switch, Route } from 'react-router';
+import CssBaseline from '../CssBaseline';
 
 
 export const App = ({
@@ -31,7 +31,7 @@ export const App = ({
               exact
               key={key}
               component={({match, location}) => (
-                <Layout {...restProps}>
+                <Layout routes={routes} {...restProps}>
                   <Component location={location} match={match} params={match.params} />
                 </Layout>
               )}

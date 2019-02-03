@@ -13,9 +13,9 @@ export const CreateArticle = ({deleteArticle}) => {
           variables: {
             id: input.value,
           },
-        }).then(data => console.log(input.value, data));
+        }).then(data => console.info(input.value, data));
       }}>
-        <input ref={node => input = node} />
+        <input ref={(node) => { input = node; }} />
         <button type="submit">Add Todo</button>
       </form>
     </div>

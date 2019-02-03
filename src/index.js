@@ -3,10 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import { createMuiTheme } from '@material-ui/core/styles';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import createTheme from './styles/createTheme';
 import routes from './routes';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
@@ -25,11 +25,7 @@ const httpLink = new HttpLink({
   // },
 });
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
-});
+const theme = createTheme();
 
 const client = new ApolloClient({
   link: httpLink,
