@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+import classNames from 'classnames';
 // MuiIcons
 import IconStarBorder from '@material-ui/icons/StarBorder';
 import IconStar from '@material-ui/icons/Star';
@@ -11,10 +12,10 @@ import styles from './RatingStars.style';
 
 const useStyles = makeStyles(styles);
 
-export const RatingStars = ({value, ...restProps}) => {
+export const RatingStars = ({className, value, ...restProps}) => {
   const classes = useStyles(restProps);
   return (
-    <ul className={classes.root}>
+    <ul className={classNames(classes.root, className)}>
       {(new Array(5)
         .fill(null))
         .map((_, idx) => (

@@ -2,8 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-// MuiComponents
-import Grid from '@material-ui/core/Grid';
 // Local Components
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -21,7 +19,7 @@ export const LayoutMain = ({routes, children, ...restProps}) => {
   return (
     <div className={classes.root}>
       <Header className={classes.header} routes={routes} />
-      <Grid className={classes.container} container spacing={16}>{children}</Grid>
+      <div className={classes.container}>{children}</div>
       <Footer className={classes.footer} />
     </div>
   );
