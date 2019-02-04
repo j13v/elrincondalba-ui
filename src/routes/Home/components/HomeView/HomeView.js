@@ -7,6 +7,13 @@ import red from '@material-ui/core/colors/red';
 import Grid from '@material-ui/core/Grid';
 import ArticleGrid from '@global/components/ArticleGrid';
 
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
+
 const GET_ARTICLES = gql`
 {
   listArticles(last: 20) {
@@ -55,7 +62,28 @@ export const HomeView = ({
   }
   return (
     <Grid container spacing={16}>
-      <Grid item sm={12} md={3} />
+      <Grid item sm={12} md={3}>
+        <h3>Categorias</h3>
+        <FormControl component="fieldset">
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox checked={false} onChange={() => ('gilad')} value="gilad" />}
+              label="Gilad Gray"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={false} onChange={() => ('jason')} value="jason" />}
+              label="Jason Killian"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={false} onChange={() => ('antoine')} value="antoine" />
+              }
+              label="Antoine Llorca"
+            />
+          </FormGroup>
+        </FormControl>
+        <h3>Precio</h3>
+      </Grid>
       <Grid item sm={12} md={9}>
         <ArticleGrid articles={articles} />
       </Grid>
