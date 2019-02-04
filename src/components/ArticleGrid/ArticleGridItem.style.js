@@ -7,6 +7,14 @@ export default theme => ({
   },
   imageBox: {
     position: 'relative',
+    overflow: 'hidden',
+    '&:hover $image': {
+      transition: 'all .5s',
+      transform: 'scale(1.2)',
+    },
+  },
+  image: {
+
   },
   infoName: {
     textAlign: 'center',

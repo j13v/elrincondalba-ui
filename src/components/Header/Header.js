@@ -29,7 +29,7 @@ function Header({routes, location, ...restProps}) {
   }
 
   return (
-    <AppBar position="sticky" color="default" className={classes.root}>
+    <AppBar position="sticky" color="default" elevation={1} className={classes.root}>
       <Toolbar className={classes.toolbar}>
         {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
           <MenuIcon />

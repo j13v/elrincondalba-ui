@@ -22,10 +22,12 @@ export const ArticleGridItem = ({
   return (
     <Grid item xs={12} sm={6} md={3}>
       <div className={classes.imageBox}>
-        <LoadableImage style={{
-          width: '100%',
-          minHeight: '314px',
-        }} />
+        <LoadableImage
+          className={classes.image}
+          style={{
+            width: '100%',
+            minHeight: '314px',
+          }} />
         <div className={classes.imageInset}>
           <Button>DETALLE</Button>
         </div>
