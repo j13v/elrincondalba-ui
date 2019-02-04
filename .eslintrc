@@ -16,7 +16,7 @@
     "react/no-unescaped-entities": 0,
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 0,
-    "no-console": ["error", { allow: ["info", "warn", "error"] }],
+    "no-console": ["warn", { allow: ["info", "warn", "error"] }],
     "no-undef": 0,
     "react/no-array-index-key": 0,
     "import/prefer-default-export": 0,

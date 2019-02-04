@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
+import Link from '../Link';
 import RatingStars from '../RatingStars';
 import LoadableImage from '../LoadableImage';
 import styles from './ArticleGridItem.style';
@@ -11,11 +11,13 @@ import styles from './ArticleGridItem.style';
 const useStyles = makeStyles(styles);
 
 export const ArticleGridItem = ({
+  id,
   name,
   description,
   price,
   category,
   rating,
+  routing,
   ...restProps
 }) => {
   const classes = useStyles(restProps);
@@ -29,7 +31,7 @@ export const ArticleGridItem = ({
             minHeight: '314px',
           }} />
         <div className={classes.imageInset}>
-          <Button>DETALLE</Button>
+          <Link to={routing} params={{articleId: id}}>DETALLE</Link>
         </div>
       </div>
       <div>
@@ -41,6 +43,7 @@ export const ArticleGridItem = ({
 };
 
 ArticleGridItem.propTypes = {
+  routing: PropTypes.string,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
@@ -50,6 +53,7 @@ ArticleGridItem.propTypes = {
 
 ArticleGridItem.defaultProps = {
   rating: 0,
+  routing: null,
 };
 
 export default ArticleGridItem;

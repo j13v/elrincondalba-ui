@@ -4,12 +4,12 @@ import Grid from '@material-ui/core/Grid';
 // import {AutoSizer, Grid, InfiniteLoader} from 'react-virtualized';
 import ArticleGridItem from './ArticleGridItem';
 
-export const ArticleGrid = ({articles}) => {
+export const ArticleGrid = ({articles, routing}) => {
   const pepe = '';
   return (
     <Grid container spacing={16}>
       {articles.map((article, key) => (
-        <ArticleGridItem key={article.id} {...article} />
+        <ArticleGridItem key={article.id} routing={routing} {...article} />
       ))}
     </Grid>);
 };
