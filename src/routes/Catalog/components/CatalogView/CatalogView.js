@@ -16,8 +16,8 @@ console.info(ROUTING_ARTICLE);
 
 const FETCH_CATALOG_DATA = gql`
 {
-  getCategories
-  getArticleMinMaxPrice{
+  listCategories
+  getArticleRangePrice{
     max
     min
   }
@@ -92,14 +92,14 @@ const mapQueryToProps = ({
     loading,
     listArticles,
     subscribeToMore,
-    getCategories,
-    getArticleMinMaxPrice,
+    listCategories,
+    getArticleRangePrice,
     ...restData
   }, ...rest
 }) => {
   const articles = flattenConnectionEdges(listArticles, loading);
-  const categories = getCategories;
-  const priceRange = getArticleMinMaxPrice;
+  const categories = listCategories;
+  const priceRange = getArticleRangePrice;
   return ({
     articles,
     categories,
