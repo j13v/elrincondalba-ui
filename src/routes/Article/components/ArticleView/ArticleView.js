@@ -7,6 +7,28 @@ import Grid from '@material-ui/core/Grid';
 import red from '@material-ui/core/colors/red';
 import LoadableImage from '@global/components/LoadableImage';
 
+const FETCH_ARTICLE_DATA = gql`
+ query GetArticle($id:String!){
+  listSizes
+  getArticle(id: $id) {
+    id
+    name
+    description
+    category
+    images
+    price
+    rating
+    stock {
+      count
+      refs
+      size
+    }
+    createdAt
+    updatedAt
+  }
+}
+`;
+
 const stock = [{
   size: 'XS',
   count: 0,
@@ -24,45 +46,91 @@ const stock = [{
   count: 0,
 }];
 
-export const ArticleView = () => {
+export const ArticleView = ({
+  article,
+  loading,
+  sizes,
+  ...restProps
+}) => {
+  if (loading) {
+    return 'LOADING';
+  }
+  if (!article) {
+    return 'Este articulo no existe';
+  }
   const pepe = '';
   return (
     <Grid container spacing={16}>
       <Grid item xs={1}>
-        {(new Array(5)).fill(null).map((_, idx) => (<LoadableImage key={idx} style={{height: '100px', width: '100%'}} />))}
+        {article.images.map((_, idx) => (
+          <LoadableImage
+            key={idx}
+            style={{
+              height: '100px',
+              width: '100%',
+            }} />
+        ))}
       </Grid>
       <Grid item xs={5}>
         <LoadableImage style={{height: '600px', width: '100%'}} />
       </Grid>
       <Grid item xs={6}>
         <h2>
-        Gabardina de cuadros
+          {article.name}
         </h2>
-        <small>Ref 5507/513/505</small>
-        <small>Talla modelo S</small>
-        <p>19,99 €</p>
+        <small>
+          {article.id}
+        </small>
+        <small>{article.category}</small>
+        <p>
+          {`${article.price}€`}
+        </p>
         <p>Selecciona tu talla</p>
         <div>
-          {stock.map(({size}, idx) => (
-            <span style={{
-              border: 'solid 1px #e5e5e5',
-              padding: '0.5rem',
-              fontWeight: 100,
-              minWidth: '2em',
-              display: 'inline-block',
-              textAlign: 'center',
-              cursor: 'pointer',
-            }}>
-              {size}
-            </span>
-          ))}
-        </div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
+          {sizes.map(($size, idx) => {
+            const availableSize = article.stock.findIndex(({size}) => ($size === size)) !== -1;
 
+            return (
+              <span
+                key={idx}
+                style={{
+                  border: 'solid 1px #e5e5e5',
+                  padding: '0.5rem',
+                  fontWeight: 100,
+                  minWidth: '2em',
+                  display: 'inline-block',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  color: availableSize ? 'inherit' : 'grey',
+                }}>
+                {$size}
+              </span>
+            );
+          })}
+        </div>
+        <p>{article.description}</p>
       </Grid>
     </Grid>
   );
 };
 
+const mapQueryToProps = ({
+  data: {
+    loading,
+    getArticle,
+    listSizes,
+    ...restData
+  }, ownProps,
 
-export default ArticleView;
+}) => ({
+  article: getArticle,
+  loading,
+  sizes: listSizes,
+  ...ownProps,
+});
+
+
+export default graphql(FETCH_ARTICLE_DATA, {
+  props: mapQueryToProps,
+  options: ownProps => ({variables: {id: ownProps.params.articleId}}),
+})(ArticleView);
