@@ -1,5 +1,5 @@
 // Core
-import React from 'react';
+import React, {Suspense} from 'react';
 import PropTypes from 'prop-types';
 // Providers
 import { ApolloProvider } from 'react-apollo';
@@ -19,27 +19,29 @@ export const App = ({
   <ApolloProvider client={client}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <Switch>
-          {routes.map(({
-            component: Component,
-            layout: Layout = layout,
-            path,
-            ...restProps
-          }, key) => (Array.isArray(path) ? path : [path]).map(path => (
-            <Route
-              exact
-              key={key}
-              component={({match, location}) => (
-                <Layout routes={routes} {...restProps}>
-                  <Component location={location} match={match} params={match.params} />
-                </Layout>
-              )}
-              path={path}
-              {...restProps} />
-          )))}
-        </Switch>
-      </BrowserRouter>
+      <Suspense fallback={<div>Loading...</div>}>
+        <BrowserRouter>
+          <Switch>
+            {routes.map(({
+              component: Component,
+              layout: Layout = layout,
+              path,
+              ...restProps
+            }, key) => (Array.isArray(path) ? path : [path]).map(path => (
+              <Route
+                exact
+                key={key}
+                component={({match, location}) => (
+                  <Layout routes={routes} {...restProps}>
+                    <Component location={location} match={match} params={match.params} />
+                  </Layout>
+                )}
+                path={path}
+                {...restProps} />
+            )))}
+          </Switch>
+        </BrowserRouter>
+      </Suspense>
     </ThemeProvider>
   </ApolloProvider>
 );

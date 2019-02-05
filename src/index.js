@@ -20,7 +20,7 @@ const cache = new InMemoryCache();
 const GRAPHQL_BASE_URL = 'http://localhost:8080/graphql';
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:8080/subscriptions',
+  uri: 'ws://localhost:8080/graphql',
   options: {
     reconnect: true,
   },

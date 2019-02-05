@@ -17,6 +17,7 @@ export const LoadableImage = ({
   ...restProps
 }) => {
   const runOnce = true;
+  let cancelled = false;
   const classes = useStyles(restProps);
   const [loadState, setLoadState] = useState({
     src: placeholder,
@@ -26,10 +27,15 @@ export const LoadableImage = ({
   useEffect(() => {
     const img = new Image();
     img.onload = () => {
-      setLoadState({
-        src: img.src,
-        loaded: true,
-      });
+      if (!cancelled) {
+        setLoadState({
+          src: img.src,
+          loaded: true,
+        });
+      }
+      return () => {
+        cancelled = true;
+      };
     };
     img.src = image;
   }, [runOnce]);
