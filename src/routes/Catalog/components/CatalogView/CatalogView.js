@@ -16,12 +16,10 @@ import CatalogFilters from '../CatalogFilters';
 
 const FETCH_CATALOG_DATA = gql`
 query getCatalog($cursor: String) {
+  getArticlePriceRange
   listCategories
-  getArticleRangePrice{
-    max
-    min
-  }
-  listArticles(first: 1 after: $cursor) {
+  listSizes
+  listArticles(first: 5 after: $cursor) {
     edges {
       node {
         id
@@ -67,6 +65,7 @@ export const HomeView = ({
   loadMore,
   categories,
   priceRange,
+  sizes,
   ...restProps
 }) => {
 
@@ -92,7 +91,7 @@ export const HomeView = ({
   return (
     <Grid container spacing={16} style={{marginTop: '1em'}}>
       <Grid item xs={12} md={3}>
-        <CatalogFilters categories={categories} priceRange={priceRange} />
+        <CatalogFilters categories={categories} priceRange={priceRange} sizes={sizes} />
       </Grid>
       <Grid item sm={12} md={9}>
         <ArticleGrid articles={articles} routing={ROUTING_ARTICLE} />
@@ -104,11 +103,13 @@ export const HomeView = ({
 export default withGraphQL(FETCH_CATALOG_DATA, ({
   listArticles: articles,
   listCategories: categories,
-  getArticleRangePrice: priceRange,
+  listSizes: sizes,
+  getArticlePriceRange: priceRange,
 }) => ({
   articles,
   categories,
   priceRange,
+  sizes,
 }), ({
   fetchMore,
   subscribeToMore,

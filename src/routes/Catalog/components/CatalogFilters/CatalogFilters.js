@@ -42,41 +42,98 @@ function valueReducer(rawValue, props, event) {
   return defaultValueReducer(rawValue, props, event);
 }
 
-export const CatalogFilters = ({categories, priceRange}) => {
+const toggleCategory = (data, value) => {
+  const index = data.indexOf(value);
+  data = [...data];
+  if (index === -1) data.push(value);
+  else data.splice(index, 1);
+  return data;
+};
+
+export const CatalogFilters = ({
+  sizes,
+  categories,
+  priceRange: [priceRangeMin, priceRangeMax],
+}) => {
   const [state, setState] = useState({
+    categories: [],
+    sizes: [],
     price: 0,
   });
   return (
     <div>
       <h3>Categorias</h3>
       <FormControl component="fieldset">
-        <FormGroup>
+        <FormGroup row>
           {
         categories.map((category, idx) => (
           <FormControlLabel
+            style={{
+              width: '50%',
+              textOverflow: 'elipsis',
+              margin: 0,
+            }}
             key={idx}
-            control={<Checkbox checked={false} onChange={() => ('gilad')} value="gilad" />}
-            label={category}
-        />
-        ))
-      }
+            control={(
+              <Checkbox
+                checked={state.categories.includes(category)}
+                onChange={() => setState({
+                  ...state,
+                  categories: toggleCategory(state.categories, category),
+                })}
+                value="gilad" />)}
+            label={category} />
+        ))}
+        </FormGroup>
+      </FormControl>
+      <h3>Tallas</h3>
+      <FormControl component="fieldset">
+        <FormGroup row>
+          {
+        sizes.map((size, idx) => (
+          <FormControlLabel
+            style={{
+              width: '50%',
+              textOverflow: 'elipsis',
+              margin: 0,
+            }}
+            key={idx}
+            control={(
+              <Checkbox
+                checked={state.categories.includes(size)}
+                onChange={() => setState({
+                  ...state,
+                  categories: toggleCategory(state.categories, size),
+                })}
+                value="gilad" />)}
+            label={size} />
+        ))}
         </FormGroup>
       </FormControl>
       <h3>Precio</h3>
       <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-        <span>{priceRange.min}</span>
-        <span>{priceRange.max}</span>
+        <span>{priceRangeMin}</span>
+        <span>{priceRangeMax}</span>
       </div>
       <Slider
         value={state.price}
         valueReducer={valueReducer}
-        min={priceRange.min}
-        max={priceRange.max}
+        min={priceRangeMin}
+        max={priceRangeMax}
         step={10}
-        onChange={(evt, value) => setState({price: value})} />
+        onChange={(evt, value) => setState({
+          ...state,
+          price: value,
+        })} />
 
     </div>
   );
+};
+
+CatalogFilters.propTypes = {
+  sizes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  priceRange: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default CatalogFilters;
