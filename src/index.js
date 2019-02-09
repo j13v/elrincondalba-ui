@@ -5,8 +5,9 @@ import './index.css';
 
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
-import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
+import { createUploadLink } from 'apollo-upload-client';
+import { split, concat } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import createTheme from './styles/createTheme';
@@ -17,7 +18,7 @@ import createRoutes from './utils/createRoutes';
 
 const cache = new InMemoryCache();
 
-const GRAPHQL_BASE_URL = 'http://localhost:8080/graphql';
+const GRAPHQL_BASE_URL = `http://${window.location.host}/graphql`;
 
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:8080/graphql',
@@ -35,13 +36,17 @@ const httpLink = new HttpLink({
   // },
 });
 
+const uploadLink = createUploadLink({
+  uri: GRAPHQL_BASE_URL,
+});
+
 const link = split(
   ({ query }) => {
     const { kind, operation } = getMainDefinition(query);
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  httpLink
+  uploadLink
 );
 
 const theme = createTheme();

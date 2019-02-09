@@ -11,12 +11,10 @@ export const LoadableImage = ({
   children,
   style,
   className,
-  sid = (~~(Math.random() * 0xff)).toString(16),
-  placeholder = `https://picsum.photos/45/78?random&_${sid}`,
-  image = `https://picsum.photos/182/314?_${sid}`,
+  placeholder = 'https://picsum.photos/45/78',
+  image = 'https://picsum.photos/182/314',
   ...restProps
 }) => {
-  const runOnce = true;
   let cancelled = false;
   const classes = useStyles(restProps);
   const [loadState, setLoadState] = useState({
@@ -26,6 +24,7 @@ export const LoadableImage = ({
 
   useEffect(() => {
     const img = new Image();
+    cancelled = false;
     img.onload = () => {
       if (!cancelled) {
         setLoadState({
@@ -38,7 +37,7 @@ export const LoadableImage = ({
       };
     };
     img.src = image;
-  }, [runOnce]);
+  }, [image]);
 
   return (
     <div

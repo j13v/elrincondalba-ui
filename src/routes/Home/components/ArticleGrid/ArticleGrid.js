@@ -48,7 +48,6 @@ function ArticleGrid({articles, classes}) {
         {articles.map((article, key) => (
           <GridListTile key={key}>
             <ArticleTile article={article} />
-
           </GridListTile>
         ))}
       </GridList>
