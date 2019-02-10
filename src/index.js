@@ -10,11 +10,13 @@ import { createUploadLink } from 'apollo-upload-client';
 import { split, concat } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { AbilityBuilder } from '@casl/ability';
 import createTheme from './styles/createTheme';
 import routes from './routes';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import createRoutes from './utils/createRoutes';
+
 
 const cache = new InMemoryCache();
 const isSecure = /https:/.test(global.location.protocol);
@@ -52,6 +54,21 @@ const link = split(
 
 const theme = createTheme();
 
+
+function defineAbilitiesFor(user) {
+  return AbilityBuilder.define((allow, forbid) => {
+    if (user.isAdmin()) {
+      allow('manage', 'all');
+    } else {
+      allow('read', 'all');
+    }
+  });
+}
+const authz = defineAbilitiesFor({
+  isAdmin: () => false,
+});
+
+console.log('desde index', authz);
 const client = new ApolloClient({
   link,
   cache,
@@ -60,6 +77,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <App
     client={client}
+    authz={authz}
     routes={createRoutes(routes)()}
     theme={theme} />,
   document.getElementById('root'),

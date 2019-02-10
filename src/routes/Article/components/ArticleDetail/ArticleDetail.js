@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Dropzone from 'react-dropzone';
 import LoadableImage from '@global/components/LoadableImage';
 import Button from '@material-ui/core/Button';
+import { useAuthz } from '@global/hooks';
 
 import style from './ArticleDetail.style';
 
@@ -37,22 +38,32 @@ export const ArticleDetail = ({
   }
 
   const classes = useStyles(restProps);
-  const [previews, setPreviews] = useState([]);
-  const [selected, setSelected] = useState(0);
-  const [files, setFiles] = useState([]);
+  const [state, setState] = useState({
+    previews: [],
+    files: [],
+    selected: 0,
+  });
+  const authz = useAuthz();
+
   // useEffect(() => () => {
   //   previews.forEach(preview => URL.revokeObjectURL(preview));
   // }, [previews]);
 
 
   const onDrop = (files) => {
-    setPreviews([...previews, ...files.map(file => URL.createObjectURL(file))]);
-    setSelected(previews.length);
-    setFiles(files);
+    setState({
+      ...state,
+      selected: previews.length,
+      previews: [...previews, ...files.map(file => URL.createObjectURL(file))],
+      files,
+    });
   };
 
   const setImageIndex = (index) => {
-    setSelected((index + previews.length) % previews.length);
+    setState({
+      ...state,
+      selected: (index + previews.length) % previews.length,
+    });
   };
 
   useKeyDown((evt) => {
@@ -71,22 +82,22 @@ export const ArticleDetail = ({
   return (
     <Grid container spacing={16}>
       <Grid item xs={1}>
-        {previews.map((preview, idx) => (
+        {state.previews.map((preview, idx) => (
           <LoadableImage
-            onClick={() => setSelected(idx)}
+            onClick={() => setState({...state, selected: idx})}
             key={idx}
             image={preview}
             style={{
               height: '100px',
               width: '100%',
-              filter: idx === selected ? 'none' : 'brightness(50%)',
+              filter: idx === state.selected ? 'none' : 'brightness(50%)',
               cursor: 'pinter',
             }} />
         ))}
       </Grid>
       <Grid item xs={5}>
         <div className={classes.mediaContent}>
-          <LoadableImage image={previews[selected]} />
+          <LoadableImage image={state.previews[state.selected]} />
           <Dropzone onDrop={onDrop}>
             {({getRootProps, getInputProps, isDragActive}) => (
               <div
@@ -139,7 +150,8 @@ export const ArticleDetail = ({
           })}
         </div>
         <p>{description}</p>
-        <Button onClick={evt => console.log(files) || onCreate(evt, {images: files})}>Update</Button>
+        {authz.can('manage') && <Button onClick={evt => console.log('poquito a poco la voy editando')}>Edit</Button>}
+        <Button onClick={evt => onCreate(evt, {images: files})}>Update</Button>
       </Grid>
     </Grid>
   );
