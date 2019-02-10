@@ -18,10 +18,11 @@ import createRoutes from './utils/createRoutes';
 
 const cache = new InMemoryCache();
 
-const GRAPHQL_BASE_URL = `http://${window.location.host}/graphql`;
+const API_DOMAIN = process.env.API_DOMAIN || window.location.host;
+const GRAPHQL_BASE_URL = `http://${API_DOMAIN}/graphql`;
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:8080/graphql',
+  uri: `ws://${API_DOMAIN}/graphql`,
   options: {
     reconnect: true,
   },
