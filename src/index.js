@@ -18,7 +18,7 @@ import createRoutes from './utils/createRoutes';
 
 const cache = new InMemoryCache();
 const isSecure = /https:/.test(global.location.protocol);
-const API_DOMAIN = global.__REACT_API_DOMAIN__ || global.location.host;
+const API_DOMAIN = global.__REACT_APP_API_DOMAIN__ || global.location.host;
 const GRAPHQL_BASE_URL = `${isSecure ? 'https' : 'http'}://${API_DOMAIN}/graphql`;
 
 const wsLink = new WebSocketLink({
