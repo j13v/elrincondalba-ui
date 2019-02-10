@@ -3,17 +3,13 @@ import PropTypes from 'prop-types';
 import AuthorizationContext from './AuthorizationContext';
 
 
-export const AuthorizationProvider = ({authz, children}) => {
+export const AuthorizationProvider = ({
+  authz,
+  children,
+}) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    authz.resolver().then((user) => {
-      setUser(user);
-      return () => {
-        console.log('pepe');
-      };
-    });
-  });
+  useEffect(() => authz.resolver(user => setUser(user)), [authz]);
 
   return (
     <AuthorizationContext.Provider value={user ? authz.apply(user) : {can: () => false}}>

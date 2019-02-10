@@ -71,21 +71,33 @@ const client = new ApolloClient({
 
 const authz = {
   apply: defineAbilitiesFor,
-  resolver: () => {
+  resolver: (cb = a => a) => {
     const key = 'secret';
     const email = 'coco@cookies.com';
     const password = 'I love cupcakes';
-    const phash = require('crypto').createHmac('sha256', key)
+    const signature = require('crypto').createHmac('sha256', key)
       .update(`${email}:${password}`)
       .digest('base64');
-    return client.query({
-      query: require('graphql-tag')(`{
+
+    return client
+      .subscribe({
+        query: require('graphql-tag')(`query($email: String!, $signature: String!){
         getAuthToken(
-          email: "${email}"
-          signature:"${phash}"
+          email: $email
+          signature: $signature
         )
       }`),
-    }).then(({data: {getAuthToken}}) => require('jwt-decode')(getAuthToken));
+        variables: {
+          email,
+          signature,
+        },
+      })
+      .subscribe(({
+        data: {
+          getAuthToken,
+        },
+      }) => cb(require('jwt-decode')(getAuthToken)))
+      .unsubscribe;
   },
 };
 
