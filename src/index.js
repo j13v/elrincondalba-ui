@@ -17,8 +17,8 @@ import * as serviceWorker from './serviceWorker';
 import createRoutes from './utils/createRoutes';
 
 const cache = new InMemoryCache();
-const isSecure = /https:/.test(window.location.protocol);
-const API_DOMAIN = process.env.REACT_APP_API_DOMAIN || global.location.host;
+const isSecure = /https:/.test(global.location.protocol);
+const API_DOMAIN = global.__REACT_API_DOMAIN__ || global.location.host;
 const GRAPHQL_BASE_URL = `${isSecure ? 'https' : 'http'}://${API_DOMAIN}/graphql`;
 
 const wsLink = new WebSocketLink({
