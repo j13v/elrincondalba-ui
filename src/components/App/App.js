@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 // Providers
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
-import { BrowserRouter } from 'react-router-dom';
-import { Switch, Route } from 'react-router';
 import { AuthorizationProvider } from '../Authorization';
+import Router from '../Router';
 // Components
 import CssBaseline from '../CssBaseline';
 
@@ -24,27 +23,7 @@ export const App = ({
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Suspense fallback={<div>Loading...</div>}>
-          <BrowserRouter>
-            <Switch>
-              {routes.map(({
-                component: Component,
-                layout: Layout = layout,
-                path,
-                ...restProps
-              }, key) => (Array.isArray(path) ? path : [path]).map(path => (
-                <Route
-                  exact
-                  key={key}
-                  component={({match, location}) => (
-                    <Layout routes={routes} {...restProps}>
-                      <Component location={location} match={match} params={match.params} />
-                    </Layout>
-                  )}
-                  path={path}
-                  {...restProps} />
-              )))}
-            </Switch>
-          </BrowserRouter>
+          <Router routes={routes} />
         </Suspense>
       </ThemeProvider>
     </ApolloProvider>

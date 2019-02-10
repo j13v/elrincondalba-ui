@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { matchPath, withRouter } from 'react-router';
+import { useRouter } from '../../hooks';
 import MenuNav from '../MenuNav';
 import logo from '../../assets/logo.svg';
 import styles from './Header.style';
@@ -14,6 +15,7 @@ function Header({routes, location, ...restProps}) {
   const classes = useStyles(restProps);
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+  const router = useRouter();
   const open = Boolean(anchorEl);
 
   function handleChange(event) {
@@ -39,7 +41,7 @@ function Header({routes, location, ...restProps}) {
         <Typography variant="h6" color="inherit" className={classes.brand}>
             D'Alba
         </Typography>
-        <MenuNav navs={routes.filter(({menu}) => menu).map(route => ({
+        <MenuNav navs={router.routes.filter(({menu}) => menu).map(route => ({
           active: !!matchPath(location.pathname, route),
           link: route.path,
           name: route.menu,

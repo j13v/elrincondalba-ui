@@ -3,6 +3,7 @@ import Catalog from './Catalog';
 import Categories from './Categories';
 import Contact from './Contact';
 import Article from './Article';
+import Orders from './Orders';
 
 
 export default [
@@ -11,4 +12,5 @@ export default [
   Categories,
   Contact,
   Article,
+  Orders,
 ];

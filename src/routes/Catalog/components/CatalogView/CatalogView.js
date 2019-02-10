@@ -78,7 +78,7 @@ export const HomeView = ({
     };
   }, [runOnce]);
   useEffect(() => {
-    const int = setTimeout(loadMore, 1000);
+    const int = setTimeout(loadMore, 10000);
     return () => {
       clearTimeout(int);
     };

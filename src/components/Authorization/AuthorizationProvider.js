@@ -12,7 +12,7 @@ export const AuthorizationProvider = ({
   useEffect(() => authz.resolver(user => setUser(user)), [authz]);
 
   return (
-    <AuthorizationContext.Provider value={user ? authz.apply(user) : {can: () => false}}>
+    <AuthorizationContext.Provider value={user ? authz.apply(user) : AuthorizationContext._currentValue}>
       {children}
     </AuthorizationContext.Provider>
   );

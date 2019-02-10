@@ -12,22 +12,17 @@ import styles from './LayoutMain.style';
 
 const useStyles = makeStyles(styles);
 
-export const LayoutMain = ({routes, children, ...restProps}) => {
+export const LayoutMain = ({children, ...restProps}) => {
 
   const classes = useStyles(restProps);
 
   return (
     <div className={classes.root}>
-      <Header className={classes.header} routes={routes} />
+      <Header className={classes.header} />
       <div className={classes.container}>{children}</div>
       <Footer className={classes.footer} />
     </div>
   );
-};
-
-
-LayoutMain.propTypes = {
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default LayoutMain;
