@@ -55,24 +55,39 @@ const link = split(
 const theme = createTheme();
 
 
-function defineAbilitiesFor(user) {
-  return AbilityBuilder.define((allow, forbid) => {
-    if (user.isAdmin()) {
-      allow('manage', 'all');
-    } else {
-      allow('read', 'all');
-    }
-  });
-}
-const authz = defineAbilitiesFor({
-  isAdmin: () => false,
+const defineAbilitiesFor = user => AbilityBuilder.define((allow, forbid) => {
+  if (user.admin) {
+    allow('manage', 'all');
+  } else {
+    allow('read', 'all');
+  }
 });
 
-console.log('desde index', authz);
+
 const client = new ApolloClient({
   link,
   cache,
 });
+
+const authz = {
+  apply: defineAbilitiesFor,
+  resolver: () => {
+    const key = 'secret';
+    const email = 'coco@cookies.com';
+    const password = 'I love cupcakes';
+    const phash = require('crypto').createHmac('sha256', key)
+      .update(`${email}:${password}`)
+      .digest('base64');
+    return client.query({
+      query: require('graphql-tag')(`{
+        getAuthToken(
+          email: "${email}"
+          signature:"${phash}"
+        )
+      }`),
+    }).then(({data: {getAuthToken}}) => require('jwt-decode')(getAuthToken));
+  },
+};
 
 ReactDOM.render(
   <App
