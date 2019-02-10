@@ -4,7 +4,6 @@ import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import ArticleDetail from '../ArticleDetail';
 
-
 const FETCH_ARTICLE_DATA = gql`
 query GetArticle($id: String!) {
   listSizes
@@ -27,14 +26,14 @@ query GetArticle($id: String!) {
 }
 `;
 const CREATE_ARTICLE = gql`
-mutation($images: [Upload]!){
+mutation($images: [Upload]!, $description: String!, $name: String!, $price: Float!, $category: String!, $rating: Int!){
   createArticle(
     images: $images
-    description: "test"
-    name: "pepe"
-    price: 39.99
-    category: "VESTIDOS"
-    rating: 8
+    description: $description
+    name: $name
+    price: $price
+    category: $category
+    rating: $rating
   ) {
     category
     id
@@ -52,9 +51,9 @@ export const ArticleView = ({
   if (!article) {
     return 'Este articulo no existe';
   }
-  const pepe = '';
   return (
     <ArticleDetail onCreate={createArticle} loading={loading} {...article} />
+
   );
 };
 

@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import { useAuthz } from '@global/hooks';
 
 import style from './ArticleDetail.style';
+import ArticleInfo from '../ArticleInfo';
+import OrderForm from '../OrderForm';
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 const useStyles = makeStyles(style);
@@ -20,6 +22,12 @@ const useKeyDown = (handler, elem = document) => useEffect(() => {
   };
 });
 
+
+const getImageByMode = (mode, images, previews) => (mode === 'edit'
+  ? previews
+  : images.map(id => `/images/${id}`));
+
+
 export const ArticleDetail = ({
   loading,
   mode,
@@ -29,6 +37,7 @@ export const ArticleDetail = ({
   price,
   images,
   stock,
+  rating,
   description,
   onCreate,
   ...restProps
@@ -39,6 +48,7 @@ export const ArticleDetail = ({
 
   const classes = useStyles(restProps);
   const [state, setState] = useState({
+    mode: 'view',
     previews: [],
     files: [],
     selected: 0,
@@ -53,8 +63,8 @@ export const ArticleDetail = ({
   const onDrop = (files) => {
     setState({
       ...state,
-      selected: previews.length,
-      previews: [...previews, ...files.map(file => URL.createObjectURL(file))],
+      selected: state.previews.length,
+      previews: [...state.previews, ...files.map(file => URL.createObjectURL(file))],
       files,
     });
   };
@@ -66,6 +76,12 @@ export const ArticleDetail = ({
     });
   };
 
+  const handleMode = (evt, mode) => {
+    setState({
+      ...state,
+      mode,
+    });
+  };
   useKeyDown((evt) => {
     switch (evt.key) {
       case 'ArrowLeft':
@@ -78,15 +94,15 @@ export const ArticleDetail = ({
         break;
     }
   });
-
+  console.log(state.mode);
   return (
     <Grid container spacing={16}>
       <Grid item xs={1}>
-        {state.previews.map((preview, idx) => (
+        {getImageByMode(state.mode, images, state.previews).map((src, idx) => (
           <LoadableImage
             onClick={() => setState({...state, selected: idx})}
             key={idx}
-            image={preview}
+            image={src}
             style={{
               height: '100px',
               width: '100%',
@@ -97,8 +113,9 @@ export const ArticleDetail = ({
       </Grid>
       <Grid item xs={5}>
         <div className={classes.mediaContent}>
-          <LoadableImage image={state.previews[state.selected]} />
-          <Dropzone onDrop={onDrop}>
+          <LoadableImage image={getImageByMode(state.mode, images, state.previews)[state.selected]} />
+          {state.mode === 'edit' && (
+          <Dropzone onDrop={onDrop} multiple={false}>
             {({getRootProps, getInputProps, isDragActive}) => (
               <div
                 {...getRootProps()}
@@ -113,45 +130,28 @@ export const ArticleDetail = ({
               </div>
             )}
           </Dropzone>
+          )}
         </div>
       </Grid>
       <Grid item xs={6}>
-        <h2>
-          {name}
-        </h2>
-        <small>
-          {id}
-        </small>
-        <small>{category}</small>
-        <p>
-          {`${price}€`}
-        </p>
-        <p>Selecciona tu talla</p>
-        <div>
-          {sizes.map(($size, idx) => {
-            const availableSize = stock.findIndex(({size}) => ($size === size)) !== -1;
-
-            return (
-              <span
-                key={idx}
-                style={{
-                  border: 'solid 1px #e5e5e5',
-                  padding: '0.5rem',
-                  fontWeight: 100,
-                  minWidth: '2em',
-                  display: 'inline-block',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  color: availableSize ? 'inherit' : 'grey',
-                }}>
-                {$size}
-              </span>
-            );
-          })}
-        </div>
-        <p>{description}</p>
-        {authz.can('manage') && <Button onClick={evt => console.log('poquito a poco la voy editando')}>Edit</Button>}
-        <Button onClick={evt => onCreate(evt, {images: files})}>Update</Button>
+        {state.mode === 'request'
+          ? <OrderForm onRequest={console.log} stock="asdadsasd" />
+          : (
+            <ArticleInfo
+              stock={stock}
+              loading={loading}
+              name={name}
+              category={category}
+              price={price}
+              rating={rating}
+              description={description}
+              onCreate={(evt, data) => onCreate(evt, {...data, images: state.files})}
+              onEdit={handleMode}
+              onUpdate={() => console.log('on update triggered in article detail')}
+              onRequest={handleMode}
+      />
+          )
+      }
       </Grid>
     </Grid>
   );
