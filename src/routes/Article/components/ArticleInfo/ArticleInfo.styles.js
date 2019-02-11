@@ -28,4 +28,14 @@ export default theme => ({
       backgroundColor: 'rgba(0,0,0,0.2)',
     },
   },
+  description: {
+    lineHeight: '1.6em',
+    fontWeight: '100',
+    letterSpacing: '0.04em',
+    fontSize: '22px',
+    textTransform: 'lowercase',
+    '&:first-letter': {
+      textTransform: 'uppercase',
+    },
+  },
 });

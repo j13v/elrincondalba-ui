@@ -12,7 +12,10 @@ import IconClose from '@material-ui/icons/Close';
 import { useAuthz } from '@global/hooks';
 import {ROUTING_ARTICLE_ORDER} from '@global/constants/routing';
 import Link from '@global/components/Link';
+import RatingStars from '@global/components/RatingStars';
+import PriceLabel from '@global/components/PriceLabel';
 import TextField from '@material-ui/core/TextField';
+import ContentEditable from 'react-sane-contenteditable';
 import styles from './ArticleInfo.styles';
 import ArticleSizeSelector, { parseSizes } from '../ArticleSizeSelector';
 
@@ -44,7 +47,7 @@ export const ArticleInfo = ({
     description,
     rating,
   } = article;
-
+  const classes = useStyles();
   const authz = useAuthz();
   const [state, setState] = useState({
     mode: 'view',
@@ -62,10 +65,10 @@ export const ArticleInfo = ({
     });
     onEdit(evt, mode);
   };
-  const handleChange = key => (evt) => {
+  const handleChange = key => (evt, value) => {
     setState({
       ...state,
-      [key]: evt.target.value,
+      [key]: value || evt.target.value,
     });
   };
   const handleCreate = (evt) => {
@@ -80,9 +83,8 @@ export const ArticleInfo = ({
     onRequest(evt, mode);
   };
   const isEditing = state.mode === 'edit';
+
   return (
-
-
     <div style={{position: 'relative'}}>
       <div>
         {authz.can('manage') && (
@@ -99,83 +101,65 @@ export const ArticleInfo = ({
           {isEditing ? <IconClose /> : <IconEdit />}
         </Fab>
         )}
-        <h2>
-          {isEditing
-            ? (
-              <TextField
-                variant="outlined"
-                fullWidth
-                value={state.name}
-                onChange={handleChange('name')} />
-            )
-            : state.name}
-        </h2>
+        <ContentEditable
+          tagName="h2"
+          className="my-class"
+          style={{
+            fontSize: '48px',
+            fontWeight: '100',
+            margin: '0.5rem 0',
+          }}
+          content={state.name}
+          editable={isEditing}
+          maxLength={140}
+          multiLine={false}
+          onChange={handleChange('name')}
+          />
       </div>
-      <div>
-        <small>
-          {id}
-        </small>
-      </div>
-      <div>
-        <small>
-          {isEditing
-            ? (
-              <TextField
-                variant="outlined"
-                fullWidth
-                value={state.category}
-                onChange={handleChange('category')} />
-            )
-            : state.category}
-        </small>
-      </div>
-      {isEditing
-        ? (
-          <TextField
-            variant="outlined"
-            fullWidth
-            value={state.price}
-            type="number"
-            onChange={handleChange('price')} />
-        )
-        : <p>{`${state.price}€`}</p>}
-
-      <div style={{display: isEditing ? 'none' : 'block'}}>
-        <p>Selecciona tu talla</p>
-        <ArticleSizeSelector sizes={parseSizes(sizes).map(item => ({
-          ...item,
-          disabled: isAvailableSize(stock, item.label),
-        }))} />
-      </div>
-      <div>
+      <div style={{
+        fontSize: '14px',
+        color: '#bcbcbc',
+        backgroundImage: 'linear-gradient(to left, #bcbcbc 33%, rgba(255,255,255,0) 0%)',
+        backgroundPosition: 'bottom',
+        backgroundSize: '20px 1px',
+        backgroundRepeat: 'repeat-x',
+        padding: '0em 0 1em 0',
+        lineHeight: '1.5',
+        margin: '1em 0',
+      }}>
         <div>
-          {!isEditing
-            ? <p>{state.rating}</p>
-            : (
-              <TextField
-                fullWidth
-                variant="outlined"
-                type="number"
-                min={0}
-                max={5}
-                value={state.rating}
-                onChange={handleChange('rating')} />
-            )}
+          Ref:&nbsp;
+          <span>{id}</span>
         </div>
         <div>
-          {!isEditing
-            ? <p>{state.description}</p>
-            : (
-              <TextField
-                fullWidth
-                variant="outlined"
-                value={state.description}
-                multiline
-                rows={4}
-                onChange={handleChange('description')} />
-            )}
+          Categoria:&nbsp;
+          <ContentEditable
+            tagName="span"
+            className="my-class"
+            content={state.category}
+            editable={isEditing}
+            maxLength={140}
+            multiLine={false}
+            onChange={handleChange('category')}
+          />
         </div>
       </div>
+      <PriceLabel value={state.price} style={{fontSize: '36px'}} />
+      <p>Selecciona tu talla</p>
+      <ArticleSizeSelector sizes={parseSizes(sizes).map(item => ({
+        ...item,
+        disabled: isAvailableSize(stock, item.label),
+      }))} />
+      <RatingStars value={state.rating} />
+      <ContentEditable
+        tagName="p"
+        className={classes.description}
+        content={state.description}
+        editable={isEditing}
+        maxLength={250}
+        multiLine
+        onChange={handleChange('description')}
+            />
       <Button onClick={onUpdate}>Update</Button>
       <Link to={ROUTING_ARTICLE_ORDER} params={{articleId: id}}>Solicitar articulo</Link>
       <Button onClick={handleCreate}>Crear articulo</Button>
