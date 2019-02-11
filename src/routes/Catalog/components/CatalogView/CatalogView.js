@@ -8,10 +8,9 @@ import {withGraphQL} from '@global/utils/relay';
 // MuiComponents
 import Grid from '@material-ui/core/Grid';
 import ArticleGrid from '@global/components/ArticleGrid';
-
-
 import {ROUTING_ARTICLE} from '@global/constants/routing';
 import CatalogFilters from '../CatalogFilters';
+import CatalogTabs from '../CatalogTabs';
 
 
 const FETCH_CATALOG_DATA = gql`
@@ -78,7 +77,7 @@ export const HomeView = ({
     };
   }, [runOnce]);
   useEffect(() => {
-    const int = setTimeout(loadMore, 10000);
+    const int = setTimeout(loadMore, 60000);
     return () => {
       clearTimeout(int);
     };
@@ -94,6 +93,7 @@ export const HomeView = ({
         <CatalogFilters categories={categories} priceRange={priceRange} sizes={sizes} />
       </Grid>
       <Grid item sm={12} md={9}>
+        <CatalogTabs style={{paddingBottom: '1rem'}} />
         <ArticleGrid articles={articles} routing={ROUTING_ARTICLE} />
       </Grid>
     </Grid>
