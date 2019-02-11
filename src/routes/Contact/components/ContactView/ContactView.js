@@ -1,51 +1,18 @@
+// Core
 import React from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import Grid from '@material-ui/core/Grid';
+import Map from '@global/components/Map';
 import ContactForm from '../ContactForm';
 
-const CREATE_ORDER = gql`
-mutation (
-    $name: String!,
-    $surname: String!,
-    $email: String!,
-    $address: String!,
-    $phone: String!,
-    $notes: String,
-    $stock: String!,
-  ) {
-  createOrder(
-    name: $name,
-    surname: $surname,
-    email: $email,
-    address: $address,
-    phone: $phone,
-    notes: $notes,
-    stock: $stock,
-  ) {
-    id
-    state
-    createdAt
-    updatedAt
-    stock {
-      id
-    }
-    notes
-    user {
-      id
-      name
-    }
-  }
-}
-
-`;
 export const ContactView = ({createOrder}) => (
-  <ContactForm onRequest={createOrder} stock="5c60366cc71df142684d8541" />
+  <Grid container spacing={32}>
+    <Grid item xs={6}>
+      <h2>Contacta con nosotros</h2>
+      <ContactForm onRequest={console.log} stock="5c60366cc71df142684d8541" />
+    </Grid>
+    <Grid item xs={6}><Map /></Grid>
+  </Grid>
 );
-export default graphql(CREATE_ORDER, {
-  props: ({mutate, ownProps}) => ({
-    ...ownProps,
-    createOrder: (evt, data) => mutate({
-      variables: data,
-    }),
-  }),
-})(ContactView);
+
+
+export default ContactView;

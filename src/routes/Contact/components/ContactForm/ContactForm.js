@@ -11,11 +11,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-
-  },
   dense: {
     marginTop: 16,
   },
@@ -66,93 +61,90 @@ function ContactForm({
   };
   return (
     <div>
-      <h2>Contacta con nostros</h2>
       <div>
-        <div>
-          <TextField
-            id="outlined-name"
-            fullWidth
-            label="Nombre"
-            className={classes.textField}
-            value={values.name}
-            onChange={handleChange('name')}
-            margin="normal"
-            variant="outlined"
-            required
+        <TextField
+          id="outlined-name"
+          fullWidth
+          label="Nombre"
+          className={classes.textField}
+          value={values.name}
+          onChange={handleChange('name')}
+          margin="normal"
+          variant="outlined"
+          required
       />
-          <TextField
-            id="outlined-surname"
-            fullWidth
-            label="Apellidos"
-            className={classes.textField}
-            value={values.surname}
-            onChange={handleChange('surname')}
-            margin="normal"
-            variant="outlined"
-            required
+        <TextField
+          id="outlined-surname"
+          fullWidth
+          label="Apellidos"
+          className={classes.textField}
+          value={values.surname}
+          onChange={handleChange('surname')}
+          margin="normal"
+          variant="outlined"
+          required
       />
-          <TextField
-            id="outlined-email"
-            fullWidth
-            label="Email"
-            className={classes.textField}
-            value={values.email}
-            onChange={handleChange('email')}
-            margin="normal"
-            variant="outlined"
-            required
+        <TextField
+          id="outlined-email"
+          fullWidth
+          label="Email"
+          className={classes.textField}
+          value={values.email}
+          onChange={handleChange('email')}
+          margin="normal"
+          variant="outlined"
+          required
       />
-          <TextField
-            id="outlined-phone"
-            fullWidth
-            label="Telefono"
-            className={classes.textField}
-            value={values.phone}
-            onChange={handleChange('phone')}
-            margin="normal"
-            variant="outlined"
-            required
+        <TextField
+          id="outlined-phone"
+          fullWidth
+          label="Telefono"
+          className={classes.textField}
+          value={values.phone}
+          onChange={handleChange('phone')}
+          margin="normal"
+          variant="outlined"
+          required
       />
-          <TextField
-            id="standard-select-subject"
-            select
-            label="Asunto"
-            className={classes.textField}
-            value={values.subject}
-            onChange={handleChange('subject')}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            helperText="Selecciona el asunto"
-            margin="normal"
+        <TextField
+          id="standard-select-subject"
+          select
+          label="Asunto"
+          className={classes.textField}
+          value={values.subject}
+          onChange={handleChange('subject')}
+          SelectProps={{
+            MenuProps: {
+              className: classes.menu,
+            },
+          }}
+          helperText="Selecciona el asunto"
+          margin="normal"
       >
-            {subjects.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            id="outlined-multiline-message"
-            fullWidth
-            label="Mensaje"
-            multiline
-            rows="10"
-            value={values.multiline}
-            onChange={handleChange('message')}
-            className={classes.textField}
-            margin="normal"
-            variant="outlined"
+          {subjects.map(option => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          id="outlined-multiline-message"
+          fullWidth
+          label="Mensaje"
+          multiline
+          rows="10"
+          value={values.multiline}
+          onChange={handleChange('message')}
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
       />
-        </div>
-        <div>
-          <Button onClick={evt => console.log('Enviar contacto')} variant="contained" color="primary" className={classes.button}>
+      </div>
+      <div>
+        <Button onClick={evt => console.log('Enviar contacto')} variant="contained" color="primary" className={classes.button}>
         Enviar
-          </Button>
+        </Button>
 
-        </div>
       </div>
     </div>
   );

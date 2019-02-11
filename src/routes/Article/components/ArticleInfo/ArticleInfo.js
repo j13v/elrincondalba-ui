@@ -1,8 +1,10 @@
+// Core
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+// Hooks
 import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import IconEdit from '@material-ui/icons/Edit';
@@ -10,23 +12,21 @@ import IconClose from '@material-ui/icons/Close';
 import { useAuthz } from '@global/hooks';
 import {ROUTING_ARTICLE_ORDER} from '@global/constants/routing';
 import Link from '@global/components/Link';
-import { TextField } from '@material-ui/core';
-import style from './ArticleInfo.style';
+import TextField from '@material-ui/core/TextField';
+import styles from './ArticleInfo.styles';
+import ArticleSizeSelector, { parseSizes } from '../ArticleSizeSelector';
 
-const sizes = ['XS', 'S', 'M', 'L', 'XL'];
-const useStyles = makeStyles(style);
+console.log(parseSizes);
+
+export const sizes = ['XS', 'S', 'M', 'L', 'XL'];
+export const useStyles = makeStyles(styles);
+export const isAvailableSize = (stock, csize) => stock.findIndex(({size}) => (csize === size)) !== -1;
 
 
 export const ArticleInfo = ({
   loading,
-  id,
-  name,
-  category,
-  price,
-  stock,
-  description,
+  article,
   onCreate,
-  rating,
   onRequest,
   onEdit,
   onUpdate,
@@ -34,6 +34,16 @@ export const ArticleInfo = ({
   if (loading) {
     return 'LOADING';
   }
+
+  const {
+    id,
+    name,
+    category,
+    price,
+    stock,
+    description,
+    rating,
+  } = article;
 
   const authz = useAuthz();
   const [state, setState] = useState({
@@ -132,28 +142,10 @@ export const ArticleInfo = ({
 
       <div style={{display: isEditing ? 'none' : 'block'}}>
         <p>Selecciona tu talla</p>
-        <div>
-          {sizes.map(($size, idx) => {
-            const availableSize = stock.findIndex(({size}) => ($size === size)) !== -1;
-
-            return (
-              <span
-                key={idx}
-                style={{
-                  border: 'solid 1px #e5e5e5',
-                  padding: '0.5rem',
-                  fontWeight: 100,
-                  minWidth: '2em',
-                  display: 'inline-block',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  color: availableSize ? 'inherit' : 'grey',
-                }}>
-                {$size}
-              </span>
-            );
-          })}
-        </div>
+        <ArticleSizeSelector sizes={parseSizes(sizes).map(item => ({
+          ...item,
+          disabled: isAvailableSize(stock, item.label),
+        }))} />
       </div>
       <div>
         <div>
@@ -193,12 +185,17 @@ export const ArticleInfo = ({
 
 
 ArticleInfo.propTypes = {
+  loading: PropTypes.bool.isRequired,
   onRequest: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
 };
 
+// name={name}
+// category={category}
+// price={price}
+// rating={rating}
+// description={description}
 
 export default ArticleInfo;
 

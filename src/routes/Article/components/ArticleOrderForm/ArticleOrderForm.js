@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function OrderForm({
+function ArticleOrderForm({
   stock,
   onRequest,
 }) {
@@ -128,8 +128,8 @@ function OrderForm({
     </div>
   );
 }
-OrderForm.propTypes = {
+ArticleOrderForm.propTypes = {
   onRequest: PropTypes.func.isRequired,
   stock: PropTypes.string.isRequired,
 };
-export default OrderForm;
+export default ArticleOrderForm;

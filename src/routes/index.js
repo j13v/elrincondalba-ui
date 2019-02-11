@@ -11,7 +11,7 @@ export default [
   Home,
   SignIn,
   Catalog,
-  Categories,
+  // Categories,
   Contact,
   Article,
   Orders,

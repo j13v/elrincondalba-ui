@@ -2,23 +2,23 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 // import {AutoSizer, Grid, InfiniteLoader} from 'react-virtualized';
-import ArticleGridItem from './ArticleGridItem';
+import CatalogArticleGridItem from './CatalogArticleGridItem';
 
-export const ArticleGrid = ({articles, routing}) => {
+export const CatalogArticleGrid = ({articles, routing}) => {
   const pepe = '';
   return (
     <Grid container spacing={16}>
       {articles.map((article, key) => (
-        <ArticleGridItem key={article.id} routing={routing} {...article} />
+        <CatalogArticleGridItem key={article.id} routing={routing} {...article} />
       ))}
     </Grid>);
 };
-ArticleGrid.propTypes = {
+CatalogArticleGrid.propTypes = {
   articles: PropTypes.arrayOf(PropTypes.object),
 };
 
-ArticleGrid.defaultProps = {
+CatalogArticleGrid.defaultProps = {
   articles: [],
 };
 
-export default ArticleGrid;
+export default CatalogArticleGrid;

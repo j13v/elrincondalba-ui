@@ -2,7 +2,18 @@
 import React, {useState, useEffect} from 'react';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
+// Mui Components
+import Grid from '@material-ui/core/Grid';
+// Router Components
+import {Route, Switch} from 'react-router';
+// Constants
+import {ROUTING_ARTICLE_ORDER} from '@global/constants/routing';
+// Local Components
 import ArticleDetail from '../ArticleDetail';
+import ArticleInfo from '../ArticleInfo';
+import ArticleOrderForm from '../ArticleOrderForm';
+import ArticleMainImage from '../ArticleMainImage';
+
 
 const FETCH_ARTICLE_DATA = gql`
 query GetArticle($id: String!) {
@@ -47,15 +58,31 @@ export const ArticleView = ({
   sizes,
   createArticle,
   ...restProps
-}) => {
-  if (!article) {
-    return 'Este articulo no existe';
-  }
-  return (
-    <ArticleDetail onCreate={createArticle} loading={loading} {...article} />
+}) => (
+  <Grid container spacing={16}>
+    <Grid item xs={1} />
+    <Grid item xs={5}>
+      <ArticleMainImage />
+    </Grid>
+    <Grid item xs={6}>
+      <Switch>
+        <Route path={ROUTING_ARTICLE_ORDER}>
+          <ArticleOrderForm onRequest={console.log} stock="asdadsasd" />
+        </Route>
+        <Route>
+          <ArticleInfo
+            loading={loading}
+            article={article}
+            onCreate={(evt, data) => onCreate(evt, {...data, images: state.files})}
+            onEdit={console.log}
+            onUpdate={console.log}
+            onRequest={console.log} />
+        </Route>
+      </Switch>
 
-  );
-};
+    </Grid>
+  </Grid>
+);
 
 const mapQueryToProps = ({
   data: {

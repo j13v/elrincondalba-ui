@@ -6,11 +6,11 @@ import classNames from 'classnames';
 import IconButton from '@material-ui/core/IconButton';
 import IconArrowLeft from '@material-ui/icons/ChevronLeft';
 import IconArrowRight from '@material-ui/icons/ChevronRight';
-import Link from '../Link';
-import RatingStars from '../RatingStars';
-import ImageCarousel from '../ImageCarousel';
-import LoadableImage from '../LoadableImage';
-import styles from './ArticleGridItem.style';
+import ImageCarousel from '@global/components/ImageCarousel';
+import Link from '@global/components/Link';
+import RatingStars from '@global/components/RatingStars';
+import LoadableImage from '@global/components/LoadableImage';
+import styles from './CatalogArticleGridItem.style';
 
 const useStyles = makeStyles(styles);
 
@@ -24,7 +24,7 @@ const useSlide = () => {
 //   minHeight: '314px',
 // }}
 
-export const ArticleGridItem = ({
+export const CatalogArticleGridItem = ({
   id,
   name,
   description,
@@ -71,7 +71,7 @@ export const ArticleGridItem = ({
     </Grid>);
 };
 
-ArticleGridItem.propTypes = {
+CatalogArticleGridItem.propTypes = {
   routing: PropTypes.string,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -80,12 +80,12 @@ ArticleGridItem.propTypes = {
   rating: PropTypes.number,
 };
 
-ArticleGridItem.defaultProps = {
+CatalogArticleGridItem.defaultProps = {
   rating: 0,
   routing: null,
 };
 
-export default ArticleGridItem;
+export default CatalogArticleGridItem;
 
 // {(new Array(5).fill(null).map((_, idx) => (
 //   <LoadableImage
