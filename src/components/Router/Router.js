@@ -5,7 +5,7 @@ import {useAuthz} from '../../hooks';
 import RouterContext from './RouterContext';
 import RouterPropTypes from './RouterPropTypes';
 
-export const Router = ({routes, ...restProps}) => {
+export const Router = ({routes, layout, ...restProps}) => {
   const authz = useAuthz();
   return (
     <RouterContext.Provider value={{
@@ -40,5 +40,9 @@ export const Router = ({routes, ...restProps}) => {
 };
 
 Router.propTypes = RouterPropTypes;
+
+Router.defaultProps = {
+  layout: ({children}) => <div>{children}</div>,
+};
 
 export default Router;
