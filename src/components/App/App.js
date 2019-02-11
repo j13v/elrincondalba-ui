@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // Providers
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from '@material-ui/styles';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { AuthorizationProvider } from '../Authorization';
 import Router from '../Router';
 // Components
@@ -21,10 +22,12 @@ export const App = ({
   <AuthorizationProvider authz={authz}>
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Suspense fallback={<div>Loading...</div>}>
-          <Router routes={routes} />
-        </Suspense>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Router routes={routes} />
+          </Suspense>
+        </MuiThemeProvider>
       </ThemeProvider>
     </ApolloProvider>
   </AuthorizationProvider>
