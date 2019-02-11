@@ -7,7 +7,8 @@ import Dropzone from 'react-dropzone';
 import LoadableImage from '@global/components/LoadableImage';
 import Button from '@material-ui/core/Button';
 import { useAuthz } from '@global/hooks';
-
+import {Route, Switch} from 'react-router';
+import {ROUTING_ARTICLE_ORDER} from '@global/constants/routing';
 import style from './ArticleDetail.style';
 import ArticleInfo from '../ArticleInfo';
 import OrderForm from '../OrderForm';
@@ -40,6 +41,7 @@ export const ArticleDetail = ({
   rating,
   description,
   onCreate,
+  match,
   ...restProps
 }) => {
   if (loading) {
@@ -135,10 +137,13 @@ export const ArticleDetail = ({
         </div>
       </Grid>
       <Grid item xs={6}>
-        {state.mode === 'request'
-          ? <OrderForm onRequest={console.log} stock="asdadsasd" />
-          : (
+        <Switch>
+          <Route path={ROUTING_ARTICLE_ORDER || `${match.path}/order`}>
+            <OrderForm onRequest={console.log} stock="asdadsasd" />
+          </Route>
+          <Route>
             <ArticleInfo
+              id={id}
               stock={stock}
               loading={loading}
               name={name}
@@ -150,9 +155,10 @@ export const ArticleDetail = ({
               onEdit={handleMode}
               onUpdate={() => console.log('on update triggered in article detail')}
               onRequest={handleMode}
-      />
-          )
-      }
+    />
+          </Route>
+        </Switch>
+
       </Grid>
     </Grid>
   );

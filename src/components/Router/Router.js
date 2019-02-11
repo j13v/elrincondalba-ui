@@ -21,7 +21,6 @@ export const Router = ({routes, layout, ...restProps}) => {
             ...restRouteProps
           }, key) => (Array.isArray(path) ? path : [path]).map(path => (
             <Route
-              exact
               key={key}
               component={({match, location}) => (
                 !roles || authz.can(roles) ? (
