@@ -6,4 +6,12 @@ export default () => createMuiTheme({
     useNextVariants: true,
     fontFamily: 'Montserrat',
   },
+  palette: {
+    primary: {
+      light: '#bda27f',
+      main: '#ad8b60',
+      dark: '#796143',
+      contrastText: '#6b552b',
+    },
+  },
 });
