@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import gql from 'graphql-tag';
+import { useQuery } from '@global/hooks';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -7,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Slider, { defaultValueReducer } from '@material-ui/lab/Slider';
+import {withErrorBoundary} from '@global/components/ErrorBoundary';
 
 /**
  * a value reducer that will snap to multiple of 10 but also to the edge value
@@ -42,6 +45,14 @@ function valueReducer(rawValue, props, event) {
   return defaultValueReducer(rawValue, props, event);
 }
 
+const FETCH_CATALOG_DATA = gql`
+query {
+  getArticlePriceRange
+  listCategories
+  listSizes
+}
+`;
+
 const toggleCategory = (data, value) => {
   const index = data.indexOf(value);
   data = [...data];
@@ -51,15 +62,22 @@ const toggleCategory = (data, value) => {
 };
 
 export const CatalogFilters = ({
-  sizes,
-  categories,
-  priceRange: [priceRangeMin, priceRangeMax],
+  suspend,
 }) => {
   const [state, setState] = useState({
     categories: [],
     sizes: [],
     price: 0,
   });
+
+  const {
+    data: {
+      getArticlePriceRange: [priceRangeMin, priceRangeMax],
+      listCategories: categories,
+      listSizes: sizes,
+    }, error,
+  } = useQuery(FETCH_CATALOG_DATA, {suspend});
+
   return (
     <div>
       <h3>Categorias</h3>
@@ -131,9 +149,10 @@ export const CatalogFilters = ({
 };
 
 CatalogFilters.propTypes = {
-  sizes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  priceRange: PropTypes.arrayOf(PropTypes.number).isRequired,
+  suspend: PropTypes.bool,
 };
 
-export default CatalogFilters;
+CatalogFilters.defaultProps = {
+  suspend: true,
+};
+export default withErrorBoundary(CatalogFilters);

@@ -15,7 +15,6 @@ const useStyles = makeStyles(styles);
 export const LayoutMain = ({children, ...restProps}) => {
 
   const classes = useStyles(restProps);
-
   return (
     <div className={classes.root}>
       <Header className={classes.header} />

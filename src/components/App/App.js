@@ -3,6 +3,7 @@ import React, {Suspense} from 'react';
 import PropTypes from 'prop-types';
 // Providers
 import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 import { ThemeProvider } from '@material-ui/styles';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { AuthorizationProvider } from '../Authorization';
@@ -21,14 +22,16 @@ export const App = ({
 }) => (
   <AuthorizationProvider authz={authz}>
     <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <MuiThemeProvider theme={theme}>
-          <CssBaseline />
-          <Suspense fallback={<div>Loading...</div>}>
-            <Router routes={routes} />
-          </Suspense>
-        </MuiThemeProvider>
-      </ThemeProvider>
+      <ApolloHooksProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <MuiThemeProvider theme={theme}>
+            <CssBaseline />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Router routes={routes} />
+            </Suspense>
+          </MuiThemeProvider>
+        </ThemeProvider>
+      </ApolloHooksProvider>
     </ApolloProvider>
   </AuthorizationProvider>
 );

@@ -12,7 +12,19 @@ export const mapEdges = (data, iterator = a => (a), dst = {}) => {
   return dst;
 };
 
-export const flattenEdges = (data, dst = {}) => mapEdges(data, value => value.edges.map(({node}) => node));
+export const flattenEdges = value => value && value.edges && value.edges.map(({node}) => node);
+
+export const flattenPropsEdges = (data) => {
+  for (let keys = Object.keys(data), i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    let value = data[key];
+    if (value && Array.isArray(value.edges)) {
+      value = flattenEdges(value);
+    }
+    dst[key] = value;
+  }
+  return dst;
+};
 
 export const mergeEdges = (prev, next, reload) => {
 
@@ -73,6 +85,98 @@ export const queryReducer = (type, state) => {
   }
 };
 
+
+export const parseOptions = (
+  mapQueryToProps = noop => noop,
+  mapDispatchToProps = noop => noop,
+  opts = {}
+) => ({
+  props: ({
+    data: {
+      // Props
+      error,
+      loading,
+      variables,
+      networkStatus,
+      // Dispatchers
+      subscribeToMore,
+      fetchMore,
+      startPolling,
+      stopPolling,
+      updateQuery: oldUpdateQuery,
+      refetch,
+      ...restData
+    },
+  }) => {
+    const props = flattenPropsEdges(restData);
+    console.log('props', query, props, restData);
+    return ({
+      error,
+      loading,
+      variables,
+      networkStatus,
+      ...mapQueryToProps(props),
+      ...mapDispatchToProps({
+        refetch,
+        startPolling,
+        stopPolling,
+        updateQuery: oldUpdateQuery,
+        subscribeToMore: (query, opts = {}) => {
+          opts.matchEdgeField = opts.matchEdgeField || 'name';
+          return subscribeToMore({
+            ...opts,
+            document: query,
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) return prev;
+              const {
+                error,
+                loading,
+                data: {
+                  postLikesSubscribe,
+                },
+              } = subscriptionData;
+                // console.info('update', subscriptionData);
+
+              return {
+                ...prev,
+                listArticles: {
+                  ...prev.listArticles,
+                  edges: prev.listArticles
+                    .edges
+                    .map(({node, __typename}) => ({
+                      node: (postLikesSubscribe[opts.matchEdgeField] === node[opts.matchEdgeField] ? postLikesSubscribe : node),
+                      __typename,
+                    })),
+                },
+              };
+            },
+          });
+        },
+        fetchMore: () => {
+          console.log(restData);
+          if (!restData.listArticles) return;
+          const {
+            pageInfo: {
+              endCursor,
+              hasNextPage,
+            },
+          } = restData.listArticles;
+
+          if (hasNextPage) {
+            fetchMore({
+              updateQuery: (prev, {fetchMoreResult}) => updateQuery(prev, fetchMoreResult),
+              variables: {
+                ...variables,
+                cursor: endCursor,
+              },
+            });
+          }
+        },
+      }),
+    });
+  },
+  ...opts,
+});
 export const withGraphQL = (
   query,
   mapQueryToProps = noop => noop,
@@ -82,96 +186,11 @@ export const withGraphQL = (
   if (!query) {
     throw new Error('Missing graphql query');
   }
-  opts = {
-    props: ({
-      data: {
-        // Props
-        error,
-        loading,
-        variables,
-        networkStatus,
-        // Dispatchers
-        subscribeToMore,
-        fetchMore,
-        startPolling,
-        stopPolling,
-        updateQuery: oldUpdateQuery,
-        refetch,
-        ...restData
-      },
-    }) => {
-      const props = flattenEdges(restData);
-      console.log('props', query, props, restData);
-      return ({
-        error,
-        loading,
-        variables,
-        networkStatus,
-        ...mapQueryToProps(props),
-        ...mapDispatchToProps({
-          refetch,
-          startPolling,
-          stopPolling,
-          updateQuery: oldUpdateQuery,
-          subscribeToMore: (query, opts = {}) => {
-            opts.matchEdgeField = opts.matchEdgeField || 'name';
-            return subscribeToMore({
-              ...opts,
-              document: query,
-              updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data) return prev;
-                const {
-                  error,
-                  loading,
-                  data: {
-                    postLikesSubscribe,
-                  },
-                } = subscriptionData;
-                // console.info('update', subscriptionData);
+  opts = parseOptions(mapQueryToProps, mapDispatchToProps, opts);
 
-                return {
-                  ...prev,
-                  listArticles: {
-                    ...prev.listArticles,
-                    edges: prev.listArticles
-                      .edges
-                      .map(({node, __typename}) => ({
-                        node: (postLikesSubscribe[opts.matchEdgeField] === node[opts.matchEdgeField] ? postLikesSubscribe : node),
-                        __typename,
-                      })),
-                  },
-                };
-              },
-            });
-          },
-          fetchMore: () => {
-            console.log(restData);
-            if (!restData.listArticles) return;
-            const {
-              pageInfo: {
-                endCursor,
-                hasNextPage,
-              },
-            } = restData.listArticles;
-
-            if (hasNextPage) {
-              fetchMore({
-                updateQuery: (prev, {fetchMoreResult}) => updateQuery(prev, fetchMoreResult),
-                variables: {
-                  ...variables,
-                  cursor: endCursor,
-                },
-              });
-            }
-          },
-        }),
-      });
-    },
-    ...opts,
-  };
   return graphql(query, {
     ...opts,
-    props: (...args) => opts.props(...args) || console.log(opts.props(...args)),
+    // props: (...args) => opts.props(...args) || console.log(opts.props(...args)),
   })(Cmp);
 };
 

@@ -32,11 +32,11 @@ export const LoadableImage = ({
           loaded: true,
         });
       }
-      return () => {
-        cancelled = true;
-      };
     };
     img.src = image;
+    return () => {
+      cancelled = true;
+    };
   }, [image]);
 
   return (

@@ -4,119 +4,33 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { makeStyles } from '@material-ui/styles';
 import red from '@material-ui/core/colors/red';
-import {withGraphQL} from '@global/utils/relay';
+import {withGraphQL, parseOptions, flattenEdges} from '@global/utils/relay';
 // MuiComponents
 import Grid from '@material-ui/core/Grid';
-
+import { useQuery } from '@global/hooks';
 import {ROUTING_ARTICLE} from '@global/constants/routing';
+import Suspense from '@global/components/Suspense';
 import CatalogFilters from '../CatalogFilters';
 import CatalogTabs from '../CatalogTabs';
 import CatalogArticleGrid from '../CatalogArticleGrid';
 
-const FETCH_CATALOG_DATA = gql`
-query getCatalog($cursor: String) {
-  getArticlePriceRange
-  listCategories
-  listSizes
-  listArticles(first: 5 after: $cursor) {
-    edges {
-      node {
-        id
-        name
-        description
-        images
-        price
-        category
-        rating
-      }
-    }
-    totalCount
-    pageInfo {
-      endCursor
-      hasNextPage
-      hasPreviousPage
-      startCursor
-    }
-  }
-}
-`;
 
-
-const SUBSCRIPTION_ARTICLES = gql`
-subscription {
-  postLikesSubscribe {
-    id
-    name
-    description
-    images
-    price
-    category
-    rating
-  }
-}
-`;
-
-
-export const HomeView = ({
-  subscribe,
-  articles,
-  loading,
-  loadMore,
-  categories,
-  priceRange,
-  sizes,
-  ...restProps
-}) => {
-
-  const runOnce = true;
-  useEffect(() => {
-    const unsubscribe = subscribe('pepe');
-    return () => {
-      // Clean up the subscription
-      unsubscribe();
-    };
-  }, [runOnce]);
-  useEffect(() => {
-    const int = setTimeout(loadMore, 60000);
-    return () => {
-      clearTimeout(int);
-    };
-  });
-
-  if (loading) {
-    return <div>Loading ...</div>;
-  }
-
-  return (
-    <Grid container spacing={16} style={{marginTop: '1em'}}>
-      <Grid item xs={12} md={3}>
-        <CatalogFilters categories={categories} priceRange={priceRange} sizes={sizes} />
-      </Grid>
-      <Grid item sm={12} md={9}>
-        <CatalogTabs style={{paddingBottom: '1rem'}} />
-        <CatalogArticleGrid articles={articles} routing={ROUTING_ARTICLE} />
-      </Grid>
+export const CatalogView = props => (
+  <Grid container spacing={16} style={{marginTop: '1em'}}>
+    <Grid item xs={12} md={3}>
+      <Suspense>
+        <CatalogFilters />
+      </Suspense>
     </Grid>
-  );
-};
-
-export default withGraphQL(FETCH_CATALOG_DATA, ({
-  listArticles: articles,
-  listCategories: categories,
-  listSizes: sizes,
-  getArticlePriceRange: priceRange,
-}) => ({
-  articles,
-  categories,
-  priceRange,
-  sizes,
-}), ({
-  fetchMore,
-  subscribeToMore,
-}) => ({
-  loadMore: () => fetchMore(),
-  subscribe: () => subscribeToMore(SUBSCRIPTION_ARTICLES),
-}))(HomeView);
+    <Grid item sm={12} md={9}>
+      <Suspense>
+        <CatalogTabs style={{paddingBottom: '1rem'}} />
+        <CatalogArticleGrid routing={ROUTING_ARTICLE} />
+      </Suspense>
+    </Grid>
+  </Grid>
+);
+export default CatalogView;
 
 
 // const flattenConnectionEdges = (data, loading) => (data && loading === false ? data.edges.map(edge => edge.node) : {edges: []});
@@ -189,3 +103,22 @@ export default withGraphQL(FETCH_CATALOG_DATA, ({
 //
 //   });
 // };
+
+
+// , parseOptions(({
+//   listArticles: articles,
+//   listCategories: categories,
+//   listSizes: sizes,
+//   getArticlePriceRange: priceRange,
+// }) => ({
+//   articles,
+//   categories,
+//   priceRange,
+//   sizes,
+// }), ({
+//   fetchMore,
+//   subscribeToMore,
+// }) => ({
+//   loadMore: () => fetchMore(),
+//   subscribe: () => subscribeToMore(SUBSCRIPTION_ARTICLES),
+// }))

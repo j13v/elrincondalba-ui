@@ -19,8 +19,6 @@ import ContentEditable from 'react-sane-contenteditable';
 import styles from './ArticleInfo.styles';
 import ArticleSizeSelector, { parseSizes } from '../ArticleSizeSelector';
 
-console.log(parseSizes);
-
 export const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const useStyles = makeStyles(styles);
 export const isAvailableSize = (stock, csize) => stock.findIndex(({size}) => (csize === size)) !== -1;
@@ -84,6 +82,13 @@ export const ArticleInfo = ({
   };
   const isEditing = state.mode === 'edit';
 
+  const handleSizeSelectorChange = (evt) => {
+    setState({
+      ...state,
+      selectedSize: state.selectedSize === evt.target.value ? null : evt.target.value,
+    });
+  };
+
   return (
     <div style={{position: 'relative'}}>
       <div>
@@ -146,10 +151,13 @@ export const ArticleInfo = ({
       </div>
       <PriceLabel value={state.price} style={{fontSize: '36px'}} />
       <p>Selecciona tu talla</p>
-      <ArticleSizeSelector sizes={parseSizes(sizes).map(item => ({
-        ...item,
-        disabled: isAvailableSize(stock, item.label),
-      }))} />
+      <ArticleSizeSelector
+        value={state.selectedSize}
+        onChange={handleSizeSelectorChange}
+        sizes={parseSizes(sizes).map(item => ({
+          ...item,
+          disabled: isAvailableSize(stock, item.label),
+        }))} />
       <RatingStars value={state.rating} />
       <ContentEditable
         tagName="p"

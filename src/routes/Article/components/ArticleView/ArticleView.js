@@ -9,11 +9,13 @@ import {Route, Switch} from 'react-router';
 // Constants
 import {ROUTING_ARTICLE_ORDER} from '@global/constants/routing';
 // Local Components
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import ArticleDetail from '../ArticleDetail';
 import ArticleInfo from '../ArticleInfo';
 import ArticleOrderForm from '../ArticleOrderForm';
 import ArticleMainImage from '../ArticleMainImage';
 
+console.log(CSSTransition);
 
 const FETCH_ARTICLE_DATA = gql`
 query GetArticle($id: String!) {
@@ -52,6 +54,32 @@ mutation($images: [Upload]!, $description: String!, $name: String!, $price: Floa
 }
 `;
 
+
+function getAnimation() {
+  const direction = 'rtl';
+  const calculatedAnimations = {};
+  const animationPrefix = 'navigation';
+
+  if (direction === 'rtl') {
+    calculatedAnimations.enter = `${animationPrefix}-enter-rtl`;
+    calculatedAnimations.enterActive = `${animationPrefix}-enter-active`;
+    calculatedAnimations.leave = `${animationPrefix}-leave-rtl`;
+    calculatedAnimations.leaveActive = `${animationPrefix}-leave-active`;
+  } else if (direction === 'ltr') {
+    calculatedAnimations.enter = `${animationPrefix}-enter-ltr`;
+    calculatedAnimations.enterActive = `${animationPrefix}-enter-active`;
+    calculatedAnimations.leave = `${animationPrefix}-leave-ltr`;
+    calculatedAnimations.leaveActive = `${animationPrefix}-leave-active`;
+  } else {
+    calculatedAnimations.enter = `${animationPrefix}-enter-fade`;
+    calculatedAnimations.enterActive = `${animationPrefix}-enter-active`;
+    calculatedAnimations.leave = `${animationPrefix}-leave-fade`;
+    calculatedAnimations.leaveActive = `${animationPrefix}-leave-active`;
+  }
+
+  return calculatedAnimations;
+}
+
 export const ArticleView = ({
   article,
   loading,
@@ -65,20 +93,26 @@ export const ArticleView = ({
       <ArticleMainImage />
     </Grid>
     <Grid item xs={6}>
-      <Switch>
-        <Route path={ROUTING_ARTICLE_ORDER}>
-          <ArticleOrderForm onRequest={console.log} stock="asdadsasd" />
-        </Route>
-        <Route>
-          <ArticleInfo
-            loading={loading}
-            article={article}
-            onCreate={(evt, data) => onCreate(evt, {...data, images: state.files})}
-            onEdit={console.log}
-            onUpdate={console.log}
-            onRequest={console.log} />
-        </Route>
-      </Switch>
+      <TransitionGroup component="div" className="page-main">
+        <CSSTransition timeout={300} classNames="fade" appear>
+          <section className="page-main-inner">
+            <Switch>
+              <Route path={ROUTING_ARTICLE_ORDER}>
+                <ArticleOrderForm onRequest={console.log} stock="asdadsasd" />
+              </Route>
+              <Route>
+                <ArticleInfo
+                  loading={loading}
+                  article={article}
+                  onCreate={(evt, data) => onCreate(evt, {...data, images: state.files})}
+                  onEdit={console.log}
+                  onUpdate={console.log}
+                  onRequest={console.log} />
+              </Route>
+            </Switch>
+          </section>
+        </CSSTransition>
+      </TransitionGroup>
 
     </Grid>
   </Grid>

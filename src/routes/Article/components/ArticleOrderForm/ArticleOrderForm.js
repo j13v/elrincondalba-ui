@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 function ArticleOrderForm({
   stock,
   onRequest,
+  ...restProps
 }) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
@@ -48,7 +49,7 @@ function ArticleOrderForm({
 
   };
   return (
-    <div>
+    <div {...restProps}>
       <div>
         <TextField
           id="outlined-name"

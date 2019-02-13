@@ -61,43 +61,42 @@ function ContactForm({
   };
   return (
     <div>
-      <div>
-        <TextField
-          id="outlined-name"
-          fullWidth
-          label="Nombre"
-          className={classes.textField}
-          value={values.name}
-          onChange={handleChange('name')}
-          margin="normal"
-          variant="outlined"
-          required
+      <TextField
+        id="outlined-name"
+        fullWidth
+        label="Nombre"
+        className={classes.textField}
+        value={values.name}
+        onChange={handleChange('name')}
+        margin="normal"
+        variant="outlined"
+        required
       />
-        <TextField
-          id="outlined-surname"
-          fullWidth
-          label="Apellidos"
-          className={classes.textField}
-          value={values.surname}
-          onChange={handleChange('surname')}
-          margin="normal"
-          variant="outlined"
-          required
+      <TextField
+        id="outlined-surname"
+        fullWidth
+        label="Apellidos"
+        className={classes.textField}
+        value={values.surname}
+        onChange={handleChange('surname')}
+        margin="normal"
+        variant="outlined"
+        required
       />
-        <TextField
-          id="outlined-email"
-          fullWidth
-          label="Email"
-          className={classes.textField}
-          value={values.email}
-          onChange={handleChange('email')}
-          margin="normal"
-          variant="outlined"
-          required
+      <TextField
+        id="outlined-email"
+        fullWidth
+        label="Email"
+        className={classes.textField}
+        value={values.email}
+        onChange={handleChange('email')}
+        margin="normal"
+        variant="outlined"
+        required
       />
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
         <TextField
           id="outlined-phone"
-          fullWidth
           label="Telefono"
           className={classes.textField}
           value={values.phone}
@@ -107,6 +106,7 @@ function ContactForm({
           required
       />
         <TextField
+          style={{flexGrow: 1}}
           id="standard-select-subject"
           select
           label="Asunto"
@@ -120,31 +120,31 @@ function ContactForm({
           }}
           helperText="Selecciona el asunto"
           margin="normal"
-      >
+          variant="outlined"
+    >
           {subjects.map(option => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          id="outlined-multiline-message"
-          fullWidth
-          label="Mensaje"
-          multiline
-          rows="10"
-          value={values.multiline}
-          onChange={handleChange('message')}
-          className={classes.textField}
-          margin="normal"
-          variant="outlined"
-      />
       </div>
+      <TextField
+        id="outlined-multiline-message"
+        fullWidth
+        label="Mensaje"
+        multiline
+        rows="10"
+        value={values.multiline}
+        onChange={handleChange('message')}
+        className={classes.textField}
+        margin="normal"
+        variant="outlined"
+      />
       <div>
         <Button onClick={evt => console.log('Enviar contacto')} variant="contained" color="primary" className={classes.button}>
-        Enviar
+      Enviar
         </Button>
-
       </div>
     </div>
   );

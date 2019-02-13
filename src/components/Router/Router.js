@@ -20,17 +20,19 @@ export const Router = ({routes, layout, ...restProps}) => {
             roles,
             ...restRouteProps
           }, key) => (Array.isArray(path) ? path : [path]).map(path => (
+            (!roles || authz.can(roles)) && (
             <Route
               key={key}
               component={({match, location}) => (
-                !roles || authz.can(roles) ? (
-                  <Layout routes={routes} {...restProps} {...restRouteProps}>
-                    <Component location={location} match={match} params={match.params} />
-                  </Layout>
-                ) : 'Unauthorized'
+                // !roles || authz.can(roles) ? (
+                <Layout routes={routes} {...restProps} {...restRouteProps}>
+                  <Component location={location} match={match} params={match.params} />
+                </Layout>
+                // ) : 'Unauthorized'
               )}
               path={path}
               {...restRouteProps} />
+            )
           )))}
         </Switch>
       </BrowserRouter>
