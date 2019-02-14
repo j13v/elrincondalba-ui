@@ -14,7 +14,7 @@ export const mapEdges = (data, iterator = a => (a), dst = {}) => {
 
 export const flattenEdges = value => value && value.edges && value.edges.map(({node}) => node);
 
-export const flattenPropsEdges = (data) => {
+export const flattenPropsEdges = (data, dst = {}) => {
   for (let keys = Object.keys(data), i = 0; i < keys.length; i++) {
     const key = keys[i];
     let value = data[key];
@@ -109,7 +109,6 @@ export const parseOptions = (
     },
   }) => {
     const props = flattenPropsEdges(restData);
-    console.log('props', query, props, restData);
     return ({
       error,
       loading,
