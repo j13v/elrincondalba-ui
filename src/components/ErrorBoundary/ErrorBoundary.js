@@ -1,19 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/styles';
 import {ErrorBoundary} from 'react-error-boundary';
+import Button from '@material-ui/core/Button';
 import styles from './ErrorBoundary.styles';
 
 
 const useStyles = makeStyles(styles);
+const useForceUpdate = () => {
+  const [errorBoundaryKey, serErrorBoundaryKey] = useState(0);
+  return [errorBoundaryKey, () => {
+    serErrorBoundaryKey(errorBoundaryKey + 1);
+  }];
+};
 
-const MyFallbackComponent = ({ componentStack, error, ...restProps}) => {
+const ErrorFallbackComponent = ({
+  componentStack, error, onRestart, ...restProps
+}) => {
   const classes = useStyles(restProps);
   return (
     <div className={classes.root}>
       <div className={classes.media} />
       <p><strong>¡Oops! Ha ocurrido un error</strong></p>
+      <div className={classes.actions}>
+        <Button color="primary" variant="outlined" onClick={onRestart}>Reniciar</Button>
+      </div>
       <p>Esto es lo que sabemos…</p>
-      <p>
+      <div>
         <strong>Error:</strong>
         <pre style={{
           whiteSpace: 'pre-wrap',
@@ -23,8 +35,8 @@ const MyFallbackComponent = ({ componentStack, error, ...restProps}) => {
         }}>
           {error.toString()}
         </pre>
-      </p>
-      <p>
+      </div>
+      <div>
         <strong>Stacktrace:</strong>
         <pre style={{
           whiteSpace: 'no-wrap',
@@ -35,19 +47,22 @@ const MyFallbackComponent = ({ componentStack, error, ...restProps}) => {
         }}>
           {componentStack.replace(/^\s+/gm, '')}
         </pre>
-      </p>
+      </div>
     </div>
   );
 };
 
-const MyErrorHandler = () => {
-
+export const withErrorBoundary = (Component, {
+  FallbackComponent = ErrorFallbackComponent,
+  onError,
+} = {}) => (props) => {
+  const [key, forceUpdate] = useForceUpdate();
+  return (
+    <ErrorBoundary
+      key={key}
+      FallbackComponent={props => <FallbackComponent onRestart={forceUpdate} {...props} />}
+      onError={(...args) => MyErrorHandler(...args) || (onError && onError(...args))}>
+      <Component {...props} />
+    </ErrorBoundary>
+  );
 };
-
-export const withErrorBoundary = (Component, {FallbackComponent, onError} = {}) => props => (
-  <ErrorBoundary
-    FallbackComponent={FallbackComponent || MyFallbackComponent}
-    onError={(...args) => MyErrorHandler(...args) || (onError && onError(...args))}>
-    <Component {...props} />
-  </ErrorBoundary>
-);

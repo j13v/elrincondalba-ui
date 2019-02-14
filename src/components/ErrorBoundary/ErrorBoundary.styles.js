@@ -13,4 +13,7 @@ export default theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundSize: '60% auto',
   },
+  actions: {
+    textAlign: 'center',
+  },
 });
