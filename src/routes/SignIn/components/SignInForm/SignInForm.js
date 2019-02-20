@@ -96,7 +96,3 @@ export const SignInForm = ({
 };
 
 export default SignInForm;
-
-
-// const email = 'coco@cookies.com';
-// const password = 'I love cupcakes';
