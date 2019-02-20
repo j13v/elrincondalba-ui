@@ -7,26 +7,30 @@ import { makeStyles } from '@material-ui/styles';
 import { useKeyDown } from '@global/hooks';
 // Components
 import LoadableImage from '@global/components/LoadableImage';
-import styles from './ArticleCarousel.styles';
+import styles from './ArticleGalleryCarousel.styles';
 
 
 export const useStyles = makeStyles(styles);
 
-export const ArticleCarousel = ({
+export const ArticleGalleryCarousel = ({
   images,
+  selected = 0,
+  onChange,
   ...restProps
 }) => {
-
-  const [selected, setSelected] = useState(0);
   const classes = useStyles(restProps);
+
+  const setSelected = (evt, index, inc = 0) => {
+    onChange(evt, (index + images.length + inc) % images.length);
+  };
 
   useKeyDown((evt) => {
     switch (evt.key) {
       case 'ArrowLeft':
-        setSelected(selected - 1);
+        setSelected(evt, selected, -1);
         break;
       case 'ArrowRight':
-        setSelected(selected + 1);
+        setSelected(evt, selected, +1);
         break;
       default:
         break;
@@ -34,7 +38,7 @@ export const ArticleCarousel = ({
   });
 
   const handleClick = idx => (evt) => {
-    setSelected(idx);
+    setSelected(evt, idx);
   };
 
   return images.map((src, idx) => (
@@ -51,4 +55,14 @@ export const ArticleCarousel = ({
   ));
 };
 
-export default ArticleCarousel;
+ArticleGalleryCarousel.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func,
+};
+
+ArticleGalleryCarousel.defaultProps = {
+  images: [],
+  onChange: null,
+};
+
+export default ArticleGalleryCarousel;

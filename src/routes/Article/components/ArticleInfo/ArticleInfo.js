@@ -2,59 +2,82 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import gql from 'graphql-tag';
 // Hooks
-import { makeStyles } from '@material-ui/styles';
-
+import {
+  useQuery,
+  useAuthz,
+  useTheme,
+  makeStyles,
+} from '@global/hooks';
+// Constants
+import {
+  ROUTING_ARTICLE_ORDER,
+  ROUTING_ARTICLE_CREATE,
+  ROUTING_ARTICLE_EDIT,
+} from '@global/constants/routing';
+// Components
+import SwipeableViews from 'react-swipeable-views';
+// Mui Components
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import IconEdit from '@material-ui/icons/Edit';
 import IconClose from '@material-ui/icons/Close';
-import { useAuthz } from '@global/hooks';
-import {ROUTING_ARTICLE_ORDER} from '@global/constants/routing';
+import TextField from '@material-ui/core/TextField';
+// Global Components
 import Link from '@global/components/Link';
 import RatingStars from '@global/components/RatingStars';
 import PriceLabel from '@global/components/PriceLabel';
-import TextField from '@material-ui/core/TextField';
-import ContentEditable from 'react-sane-contenteditable';
-import styles from './ArticleInfo.styles';
+import ButtonLink from '@global/components/ButtonLink';
+import ContentEditable from '@global/components/ContentEditable';
+// Local Components
 import ArticleSizeSelector, { parseSizes } from '../ArticleSizeSelector';
+// Styles
+import styles from './ArticleInfo.styles';
 
-export const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const useStyles = makeStyles(styles);
-export const isAvailableSize = (stock, csize) => stock.findIndex(({size}) => (csize === size)) !== -1;
+export const isAvailableSize = (stock, csize) => stock && stock.findIndex(({size}) => (csize === size)) !== -1;
 
+const GET_ARTICLE_BY_ID = gql`
+query($articleId: ObjectID!){
+  getArticle(id: $articleId) {
+    id
+    name
+    description
+    category
+    price
+    rating
+    stock {
+      count
+      refs
+      size
+    }
+    createdAt
+    updatedAt
+  }
+}
+`;
 
 export const ArticleInfo = ({
-  loading,
-  article,
-  onCreate,
-  onRequest,
-  onEdit,
-  onUpdate,
+  articleId,
+  suspend,
+  sizes,
+  // onCreate,
+  // onRequest,
+  // onEdit,
+  // onUpdate,
 }) => {
-  if (loading) {
-    return 'LOADING';
-  }
-
-  const {
-    id,
-    name,
-    category,
-    price,
-    stock,
-    description,
-    rating,
-  } = article;
   const classes = useStyles();
+  const theme = useTheme();
   const authz = useAuthz();
-  const [state, setState] = useState({
-    mode: 'view',
-    name,
-    category,
-    price,
-    description,
-    rating,
-  });
+  const {
+    data: {
+      getArticle: article,
+    },
+    error,
+  } = useQuery(GET_ARTICLE_BY_ID, {variables: {articleId}, suspend});
+  const [state, setState] = useState({...article});
+
   const handleEdit = (evt) => {
     const mode = state.mode === 'edit' ? 'view' : 'edit';
     setState({
@@ -80,8 +103,8 @@ export const ArticleInfo = ({
     });
     onRequest(evt, mode);
   };
-  const isEditing = state.mode === 'edit';
-
+  // const isEditing = state.mode === 'edit';
+  const isEditing = true;
   const handleSizeSelectorChange = (evt) => {
     setState({
       ...state,
@@ -89,55 +112,33 @@ export const ArticleInfo = ({
     });
   };
 
+  const handleChangeIndex = (index) => {
+    console.log(index);
+  };
+  console.log(state.stock);
   return (
     <div style={{position: 'relative'}}>
-      <div>
-        {authz.can('manage') && (
-        <Fab
-          style={{
-            position: 'absolute',
-            right: '0',
-            zIndex: 99,
-          }}
-          size="small"
-          color="primary"
-          onClick={handleEdit}
-          aria-label="Editar">
-          {isEditing ? <IconClose /> : <IconEdit />}
-        </Fab>
-        )}
-        <ContentEditable
-          tagName="h2"
-          className="my-class"
-          style={{
-            fontSize: '48px',
-            fontWeight: '100',
-            margin: '0.5rem 0',
-          }}
-          content={state.name}
-          editable={isEditing}
-          maxLength={140}
-          multiLine={false}
-          onChange={handleChange('name')}
+      <ContentEditable
+        tagName="h2"
+        className="my-class"
+        style={{
+          fontSize: '48px',
+          fontWeight: '100',
+          margin: '0.5rem 0',
+        }}
+        content={state.name}
+        editable={isEditing}
+        maxLength={140}
+        multiLine={false}
+        onChange={handleChange('name')}
           />
-      </div>
-      <div style={{
-        fontSize: '14px',
-        color: '#bcbcbc',
-        backgroundImage: 'linear-gradient(to left, #bcbcbc 33%, rgba(255,255,255,0) 0%)',
-        backgroundPosition: 'bottom',
-        backgroundSize: '20px 1px',
-        backgroundRepeat: 'repeat-x',
-        padding: '0em 0 1em 0',
-        lineHeight: '1.5',
-        margin: '1em 0',
-      }}>
+      <div className={classes.briefBox}>
         <div>
-          Ref:&nbsp;
-          <span>{id}</span>
+          <span>Ref:&nbsp;</span>
+          <span>{state.id}</span>
         </div>
         <div>
-          Categoria:&nbsp;
+          <span>Categoria:&nbsp;</span>
           <ContentEditable
             tagName="span"
             className="my-class"
@@ -149,6 +150,7 @@ export const ArticleInfo = ({
           />
         </div>
       </div>
+      <RatingStars value={state.rating} />
       <PriceLabel value={state.price} style={{fontSize: '36px'}} />
       <p>Selecciona tu talla</p>
       <ArticleSizeSelector
@@ -156,9 +158,9 @@ export const ArticleInfo = ({
         onChange={handleSizeSelectorChange}
         sizes={parseSizes(sizes).map(item => ({
           ...item,
-          disabled: isAvailableSize(stock, item.label),
+          disabled: !isAvailableSize(state.stock, item.label),
         }))} />
-      <RatingStars value={state.rating} />
+
       <ContentEditable
         tagName="p"
         className={classes.description}
@@ -168,21 +170,35 @@ export const ArticleInfo = ({
         multiLine
         onChange={handleChange('description')}
             />
-      <Button onClick={onUpdate}>Update</Button>
-      <Link to={ROUTING_ARTICLE_ORDER} params={{articleId: id}}>Solicitar articulo</Link>
-      <Button onClick={handleCreate}>Crear articulo</Button>
     </div>
   );
 };
 
 
+// <Button onClick={onUpdate}>Update</Button>
+// <ButtonLink to={ROUTING_ARTICLE_ORDER} params={{articleId: state.id}}>Solicitar articulo</ButtonLink>
+// <ButtonLink to={ROUTING_ARTICLE_CREATE}>Crear Articulo</ButtonLink>
+// <ButtonLink to={ROUTING_ARTICLE_EDIT}>Crear Articulo</ButtonLink>
+// <Button onClick={handleCreate}>Crear articulo</Button>
+// <SwipeableViews
+//   axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+//   index={0}
+//   onChangeIndex={handleChangeIndex}>
+//   {sizes.map(size => <div dir={theme.direction}>{size}</div>)}
+// </SwipeableViews>
 ArticleInfo.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  onRequest: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
+  suspend: PropTypes.bool,
+  sizes: PropTypes.arrayOf(PropTypes.string),
+  // loading: PropTypes.bool.isRequired,
+  // onRequest: PropTypes.func.isRequired,
+  // onEdit: PropTypes.func.isRequired,
+  // onUpdate: PropTypes.func.isRequired,
 };
 
+ArticleInfo.defaultProps = {
+  suspend: true,
+  sizes: ['XS', 'S', 'M', 'L', 'XL'],
+};
 // name={name}
 // category={category}
 // price={price}

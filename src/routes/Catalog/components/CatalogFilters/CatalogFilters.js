@@ -94,12 +94,13 @@ export const CatalogFilters = ({
             key={idx}
             control={(
               <Checkbox
+                color="primary"
                 checked={state.categories.includes(category)}
                 onChange={() => setState({
                   ...state,
                   categories: toggleCategory(state.categories, category),
                 })}
-                value="gilad" />)}
+                value={category} />)}
             label={category} />
         ))}
         </FormGroup>
@@ -118,12 +119,13 @@ export const CatalogFilters = ({
             key={idx}
             control={(
               <Checkbox
+                color="primary"
                 checked={state.categories.includes(size)}
                 onChange={() => setState({
                   ...state,
                   categories: toggleCategory(state.categories, size),
                 })}
-                value="gilad" />)}
+                value={size} />)}
             label={size} />
         ))}
         </FormGroup>

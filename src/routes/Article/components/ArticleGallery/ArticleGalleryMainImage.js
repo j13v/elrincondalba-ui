@@ -7,11 +7,11 @@ import { makeStyles } from '@material-ui/styles';
 // Components
 import Dropzone from 'react-dropzone';
 import LoadableImage from '@global/components/LoadableImage';
-import styles from './ArticleMainImage.styles';
+import styles from './ArticleGalleryMainImage.styles';
 
 export const useStyles = makeStyles(styles);
 
-export const ArticleMainImage = ({
+export const ArticleGalleryMainImage = ({
   edit,
   image,
   ...restProps
@@ -52,14 +52,14 @@ export const ArticleMainImage = ({
   );
 };
 
-ArticleMainImage.propTypes = {
+ArticleGalleryMainImage.propTypes = {
   edit: PropTypes.bool,
   image: PropTypes.string,
 };
 
-ArticleMainImage.defaultProps = {
+ArticleGalleryMainImage.defaultProps = {
   edit: false,
   image: '', // TODO base64 default image
 };
 
-export default ArticleMainImage;
+export default ArticleGalleryMainImage;

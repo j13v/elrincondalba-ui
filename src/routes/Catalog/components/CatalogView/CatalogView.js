@@ -23,8 +23,8 @@ export const CatalogView = props => (
       </Suspense>
     </Grid>
     <Grid item sm={12} md={9}>
+      <CatalogTabs style={{paddingBottom: '1rem'}} />
       <Suspense>
-        <CatalogTabs style={{paddingBottom: '1rem'}} />
         <CatalogArticleGrid routing={ROUTING_ARTICLE} />
       </Suspense>
     </Grid>

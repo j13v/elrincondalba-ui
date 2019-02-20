@@ -25,17 +25,24 @@ export const ArticleSizeSelector = ({
 
   return (
     <div className={classes.root}>
-      {sizes.map(({label, disabled, value}, idx) => (
+      {sizes.map(({label, value, ...restRadioProps}, idx) => (
         <Radio
           key={idx}
           color="primary"
           checked={selected === value}
+          classes={{
+            root: classes.radio,
+            colorPrimary: classes.colorPrimary,
+            checked: classes.checked,
+            disabled: classes.disabled,
+          }}
           icon={<span className={classes.label}>{label}</span>}
           checkedIcon={<span className={classes.label}>{label}</span>}
           onChange={onChange}
           name={`article-size-selector-${seed}`}
-          className={classes.radio}
-          value={value} />
+          value={value}
+          {...restProps}
+          {...restRadioProps} />
       ))}
     </div>
   );

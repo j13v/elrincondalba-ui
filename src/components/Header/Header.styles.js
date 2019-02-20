@@ -2,12 +2,15 @@ export default theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: '#FFFFFF',
+    boxShadow: 'none',
+    borderBottom: '1px solid #EFEFEF',
   },
   brand: {
     flexGrow: 1,
     fontWeight: 600,
     fontStyle: 'normal',
     marginLeft: '1em',
+    fontSize: '1.5rem',
   },
   menuButton: {
     marginLeft: -12,

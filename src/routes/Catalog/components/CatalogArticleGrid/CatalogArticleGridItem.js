@@ -58,9 +58,6 @@ export const CatalogArticleGridItem = ({
               <IconArrowRight />
             </IconButton>
           </div>
-          <div className={classes.actions}>
-            <Link to={routing} params={{articleId: id}}>DETALLE</Link>
-          </div>
         </div>
       </div>
       <div>

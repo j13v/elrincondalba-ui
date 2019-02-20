@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 import { ApolloClient } from 'apollo-client';
+import { setContext } from 'apollo-link-context';
+import { withClientState } from 'apollo-link-state';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { createUploadLink } from 'apollo-upload-client';
@@ -39,8 +41,49 @@ const httpLink = new HttpLink({
   // },
 });
 
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
+
 const uploadLink = createUploadLink({
   uri: GRAPHQL_BASE_URL,
+});
+
+const localLink = withClientState({
+  cache,
+  defaults: {
+    isConnected: true,
+  },
+  resolvers: {
+    Mutation: {
+      updateNetworkStatus: (_, { isConnected }, { cache }) => {
+        cache.writeData({ data: { isConnected }});
+        return null;
+      },
+    },
+  },
+  // typeDefs: `
+  //   type CatalogFilters {
+  //     sortBy: String
+  //     categories: [String]
+  //     priceRange: [Integer]
+  //   }
+  //   type Query {
+  //     catalogFilters: CatalogFilters
+  //   }
+  //   type Mutation {
+  //     updateCatalogFilters(catalogFilters: CatalogFilter!)
+  //   }
+  // `,
 });
 
 const link = split(
@@ -49,7 +92,7 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  uploadLink
+  authLink.concat(localLink.concat(uploadLink))
 );
 
 const theme = createTheme();
@@ -72,32 +115,11 @@ const client = new ApolloClient({
 const authz = {
   apply: defineAbilitiesFor,
   resolver: (cb = a => a) => {
-    const key = 'secret';
-    const email = 'coco@cookies.com';
-    const password = 'I love cupcakes';
-    const signature = require('crypto').createHmac('sha256', key)
-      .update(`${email}:${password}`)
-      .digest('base64');
-
-    return client
-      .subscribe({
-        query: require('graphql-tag')(`query($email: String!, $signature: String!){
-        getAuthToken(
-          email: $email
-          signature: $signature
-        )
-      }`),
-        variables: {
-          email,
-          signature,
-        },
-      })
-      .subscribe(({
-        data: {
-          getAuthToken,
-        },
-      }) => cb(require('jwt-decode')(getAuthToken)))
-      .unsubscribe;
+    const accessToken = localStorage.getItem('token');
+    console.log(accessToken);
+    if (accessToken) {
+      cb(require('jwt-decode')(localStorage.getItem('token')));
+    }
   },
 };
 

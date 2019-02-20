@@ -28,6 +28,17 @@ export default theme => ({
       backgroundColor: 'rgba(0,0,0,0.2)',
     },
   },
+  briefBox: {
+    fontSize: '14px',
+    color: '#bcbcbc',
+    backgroundImage: 'linear-gradient(to left, #bcbcbc 33%, rgba(255,255,255,0) 0%)',
+    backgroundPosition: 'bottom',
+    backgroundSize: '20px 1px',
+    backgroundRepeat: 'repeat-x',
+    padding: '0em 0 1em 0',
+    lineHeight: '1.5',
+    margin: '1em 0',
+  },
   description: {
     lineHeight: '1.6em',
     fontWeight: '100',

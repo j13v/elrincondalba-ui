@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import RouterContext from './RouterContext';
-
+import RouterPropTypes from './RouterPropTypes';
 
 export const RouterProvider = ({
-  routes,
+  routes = [],
   children,
 }) => (
   <RouterContext.Provider value={routes}>

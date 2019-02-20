@@ -1,5 +1,45 @@
-// import React, { useState, useEffect } from 'react';
-// import PropTypes from 'prop-types';
+// Core
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import gql from 'graphql-tag';
+// Constants
+import {
+  ROUTING_ARTICLE_ORDER,
+  ROUTING_ARTICLE_CREATE,
+  ROUTING_ARTICLE_EDIT,
+  ROUTING_ARTICLE_STOCK,
+} from '@global/constants/routing';
+// Router Components
+import {Route, Switch} from 'react-router';
+// Components
+import SwitchAnimated from '@global/components/SwitchAnimated';
+import ArticleInfo from '../ArticleInfo';
+import ArticleOrderForm from '../ArticleOrderForm';
+import ArticleStock from '../ArticleStock';
+
+
+export default ({
+  articleId,
+  routeCreate = ROUTING_ARTICLE_CREATE,
+  routeStock = ROUTING_ARTICLE_STOCK,
+  routeEdit = ROUTING_ARTICLE_EDIT,
+  routeOrder = ROUTING_ARTICLE_ORDER,
+}) => (
+  <SwitchAnimated>
+    <Route path={routeOrder}>
+      <ArticleOrderForm onRequest={console.log} stock="asdadsasd" />
+    </Route>
+    <Route path={routeStock}>
+      <ArticleStock articleId={articleId} />
+    </Route>
+    <Route path={routeCreate}>
+      <ArticleInfo />
+    </Route>
+    <Route>
+      <ArticleInfo articleId={articleId} />
+    </Route>
+  </SwitchAnimated>
+);
 // import classNames from 'classnames';
 // import { makeStyles } from '@material-ui/styles';
 // import Dropzone from 'react-dropzone';

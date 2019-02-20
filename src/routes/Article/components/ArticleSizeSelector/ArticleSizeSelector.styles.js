@@ -5,8 +5,6 @@ export default theme => ({
     margin: '1rem 0',
     padding: 0,
     color: '#e5e5e5',
-    borderStyle: 'solid',
-    borderWidth: '1px',
     '&$fullWidth': {
       width: '100%',
     },
@@ -17,18 +15,31 @@ export default theme => ({
     minWidth: '2em',
     display: 'table-cell',
     textAlign: 'center',
-    borderRightStyle: 'solid',
-    borderRightWidth: '1px',
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    borderRightStyle: 'none',
     borderRadius: 0,
     color: 'inherit',
     '&:last-child': {
-      border: 'none',
+      borderRightStyle: 'solid',
+      boxShadow: 'none !important',
     },
-    '&disabled': {
-      color: '#e5e5e5',
+    '&$disabled': {
+      backgroundColor: '#EFEFEF',
     },
-    '&checked': {
-      boxShadow: '1px 1px 1px 1px #EFEFEF',
+    '&$disabled $label': {
+      color: '#A2A2A2',
+    },
+  },
+  colorPrimary: {
+    '&$checked': {
+      backgroundColor: theme.palette.primary.main,
+      borderColor: theme.palette.primary.dark,
+      boxShadow: `inset -1px 0px 0px 0px ${theme.palette.primary.dark}`,
+      '& $label': {
+        color: theme.palette.primary.dark,
+        fontWeight: 200,
+      },
     },
   },
   label: {
