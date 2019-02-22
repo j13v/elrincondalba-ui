@@ -49,17 +49,19 @@ export const ArticleGallery = ({
     },
     error,
   } = useQuery(GET_ARTICLE_IMAGES_BY_ID, {variables: {articleId}, suspend});
+  const [selectedImage, setSelectedImage] = useState(articleImages.length ? 0 : -1);
   const [images, setImages] = useState(articleImages.map(image => `/images/${image}`));
   const [index, setIndex] = useState(0);
 
   const handleChange = (evt, index) => {
-    setIndex(index);
+    setSelectedImage(index);
   };
 
   return (
     <Grid container spacing={16}>
       <Grid item xs={2}>
         <ArticleGalleryCarousel
+          selected={selectedImage}
           images={[...images, ...previews]}
           onChange={handleChange} />
       </Grid>
@@ -67,7 +69,7 @@ export const ArticleGallery = ({
         <ArticleGalleryMainImage
           edit={edit}
           onDrop={handleDrop}
-          image={images[index]} />
+          image={[...images, ...previews][selectedImage]} />
       </Grid>
     </Grid>
   );
