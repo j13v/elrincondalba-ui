@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <!-- <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" /> -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -23,10 +23,11 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <script type="text/javascript">
-
-      window.__REACT_APP_API_DOMAIN__ = !/REACT_APP_API_DOMAIN/.test("%REACT_APP_API_DOMAIN%") ? "%REACT_APP_API_DOMAIN%" : 0 
+      window.__REACT_APP_API_DOMAIN__ = !/REACT_APP_API_DOMAIN/.test("%REACT_APP_API_DOMAIN%") ? "%REACT_APP_API_DOMAIN%" : 0
+      window.__REACT_APP_GOOGLE_MAPS_KEY__ = !/REACT_APP_GOOGLE_MAPS_KEY/.test("%REACT_APP_GOOGLE_MAPS_KEY%") ? "%REACT_APP_GOOGLE_MAPS_KEY%" : 0
+      window.__REACT_APP_SECRET__ = !/REACT_APP_SECRET/.test("%REACT_APP_SECRET%") ? "%REACT_APP_SECRET%" : 0
     </script>
-    <title>React App</title>
+    <title>El rincón D'Alba</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
