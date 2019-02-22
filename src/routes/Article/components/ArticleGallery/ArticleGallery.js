@@ -29,10 +29,19 @@ export const useStyles = makeStyles(styles);
 
 export const ArticleGallery = ({
   suspend,
+  edit,
   articleId,
   ...restProps
 }) => {
   const [state, setState] = useState({});
+  const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+
+  const handleDrop = (files) => {
+    setPreviews([...previews, ...files.map(file => URL.createObjectURL(file))]);
+    setFiles(files);
+  };
+
   const classes = useStyles(restProps);
   const {
     data: {
@@ -51,11 +60,13 @@ export const ArticleGallery = ({
     <Grid container spacing={16}>
       <Grid item xs={2}>
         <ArticleGalleryCarousel
-          images={images}
+          images={[...images, ...previews]}
           onChange={handleChange} />
       </Grid>
       <Grid item xs={10}>
         <ArticleGalleryMainImage
+          edit={edit}
+          onDrop={handleDrop}
           image={images[index]} />
       </Grid>
     </Grid>

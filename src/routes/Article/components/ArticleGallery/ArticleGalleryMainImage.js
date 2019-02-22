@@ -14,20 +14,16 @@ export const useStyles = makeStyles(styles);
 export const ArticleGalleryMainImage = ({
   edit,
   image,
+  onDrop,
   ...restProps
 }) => {
   const classes = useStyles(restProps);
-  const [files, setFiles] = useState([]);
-
-  const handleDrop = (files) => {
-    setState(files);
-  };
 
   return (
     <div className={classes.root}>
       <LoadableImage image={image} />
       {edit && (
-      <Dropzone onDrop={handleDrop} multiple={false}>
+      <Dropzone onDrop={onDrop} multiple={false}>
         {({getRootProps, getInputProps, isDragActive}) => (
           <div
             {...getRootProps()}

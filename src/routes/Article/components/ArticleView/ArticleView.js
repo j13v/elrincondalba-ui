@@ -1,14 +1,25 @@
 // Core
 import React, {useState, useEffect} from 'react';
 import { graphql, compose } from 'react-apollo';
+// Components
+import {Route, Switch} from 'react-router';
 // Mui Components
 import Grid from '@material-ui/core/Grid';
 // Global Components
 import Suspense from '@global/components/Suspense';
+import SwitchAnimated from '@global/components/SwitchAnimated';
+// Constants
+import {
+  ROUTING_ARTICLE_ORDER,
+  ROUTING_ARTICLE_CREATE,
+  ROUTING_ARTICLE_EDIT,
+  ROUTING_ARTICLE_STOCK,
+} from '@global/constants/routing';
 // Local Components
-import ArticleDetail from '../ArticleDetail';
 import ArticleGallery from '../ArticleGallery';
-
+import ArticleInfo from '../ArticleInfo';
+import ArticleOrderForm from '../ArticleOrderForm';
+import ArticleStock from '../ArticleStock';
 
 export const ArticleView = ({
   article,
@@ -21,12 +32,35 @@ export const ArticleView = ({
   <Grid container spacing={16}>
     <Grid item xs={6}>
       <Suspense>
-        <ArticleGallery articleId={articleId} />
+        <Switch>
+          <Route path={ROUTING_ARTICLE_EDIT}>
+            <ArticleGallery edit articleId={articleId} />
+          </Route>
+          <Route>
+            <ArticleGallery articleId={articleId} />
+          </Route>
+        </Switch>
       </Suspense>
     </Grid>
     <Grid item xs={6}>
       <Suspense>
-        <ArticleDetail articleId={articleId} />
+        <SwitchAnimated>
+          <Route path={ROUTING_ARTICLE_ORDER}>
+            <ArticleOrderForm onRequest={console.log} stock="asdadsasd" />
+          </Route>
+          <Route path={ROUTING_ARTICLE_STOCK}>
+            <ArticleStock articleId={articleId} />
+          </Route>
+          <Route path={ROUTING_ARTICLE_CREATE}>
+            <ArticleInfo />
+          </Route>
+          <Route path={ROUTING_ARTICLE_EDIT}>
+            <ArticleInfo articleId={articleId} edit />
+          </Route>
+          <Route>
+            <ArticleInfo articleId={articleId} />
+          </Route>
+        </SwitchAnimated>
       </Suspense>
     </Grid>
   </Grid>
