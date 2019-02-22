@@ -23,7 +23,7 @@ export default ({
       editable={editable}
       className={classNames(
         classes.root, {
-          [classes.editable]: true,
+          [classes.editable]: editable,
         }, className
       )}
       {...restProps}

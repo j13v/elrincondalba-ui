@@ -38,6 +38,15 @@ import styles from './ArticleInfo.styles';
 export const useStyles = makeStyles(styles);
 export const isAvailableSize = (stock, csize) => stock && stock.findIndex(({size}) => (csize === size)) !== -1;
 
+
+const getSelectedStockBySize = (stock, selectedSize = '') => {
+  stock = stock.find(({size}) => size.toUpperCase() === selectedSize.toUpperCase());
+  if (stock && stock.refs && stock.refs.length) {
+    return stock.refs[0];
+  }
+  return undefined;
+};
+
 const GET_ARTICLE_BY_ID = gql`
 query($articleId: ObjectID!){
   getArticle(id: $articleId) {
@@ -62,11 +71,13 @@ export const ArticleInfo = ({
   articleId,
   suspend,
   sizes,
+  edit,
   // onCreate,
   // onRequest,
   // onEdit,
   // onUpdate,
 }) => {
+
   const classes = useStyles();
   const theme = useTheme();
   const authz = useAuthz();
@@ -77,6 +88,7 @@ export const ArticleInfo = ({
     error,
   } = useQuery(GET_ARTICLE_BY_ID, {variables: {articleId}, suspend});
   const [state, setState] = useState({...article});
+  const [selectedSize, setSelectedSize] = useState();
 
   const handleEdit = (evt) => {
     const mode = state.mode === 'edit' ? 'view' : 'edit';
@@ -104,18 +116,19 @@ export const ArticleInfo = ({
     onRequest(evt, mode);
   };
   // const isEditing = state.mode === 'edit';
-  const isEditing = true;
+  const isEditing = !!edit;
+
   const handleSizeSelectorChange = (evt) => {
-    setState({
-      ...state,
-      selectedSize: state.selectedSize === evt.target.value ? null : evt.target.value,
-    });
+    setSelectedSize(selectedSize === evt.target.value ? null : evt.target.value);
   };
 
   const handleChangeIndex = (index) => {
     console.log(index);
   };
-  console.log(state.stock);
+
+
+  const selectedStockId = getSelectedStockBySize(state.stock, selectedSize);
+  console.log(selectedStockId);
   return (
     <div style={{position: 'relative'}}>
       <ContentEditable
@@ -154,7 +167,7 @@ export const ArticleInfo = ({
       <PriceLabel value={state.price} style={{fontSize: '36px'}} />
       <p>Selecciona tu talla</p>
       <ArticleSizeSelector
-        value={state.selectedSize}
+        value={selectedSize}
         onChange={handleSizeSelectorChange}
         sizes={parseSizes(sizes).map(item => ({
           ...item,
@@ -170,6 +183,47 @@ export const ArticleInfo = ({
         multiLine
         onChange={handleChange('description')}
             />
+
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        {edit ? (
+          <>
+            <ButtonLink
+              color="primary"
+              variant="outlined"
+              to=".">
+              Cancel
+            </ButtonLink>
+            <ButtonLink
+              color="primary"
+              variant="outlined"
+              to=".">
+              Actualizar
+            </ButtonLink>
+          </>
+        )
+          : (
+            <ButtonLink
+              color="primary"
+              variant="outlined"
+              to={ROUTING_ARTICLE_EDIT}
+              params={{articleId}}>
+              Editar Articulo
+            </ButtonLink>
+          )}
+        {!edit && (
+          <ButtonLink
+            color="primary"
+            variant="outlined"
+            to={ROUTING_ARTICLE_ORDER}
+            disabled={!selectedStockId}
+            params={{
+              articleId,
+              stockId: state.stock[0].refs[0],
+            }}>
+            Solicitar Articulo
+          </ButtonLink>
+        )}
+      </div>
     </div>
   );
 };

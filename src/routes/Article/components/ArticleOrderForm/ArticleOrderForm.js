@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
+import ButtonLink from '@global/components/ButtonLink';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -120,9 +120,20 @@ function ArticleOrderForm({
           variant="outlined"
       />
       </div>
-      <div>
-        <Button onClick={evt => (onRequest(evt, values))} variant="contained" color="primary" className={classes.button}>
-        Solicitar articulo
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <ButtonLink
+          to="../"
+          variant="outlined"
+          color="primary"
+          className={classes.button}>
+        Cancelar
+        </ButtonLink>
+        <Button
+          onClick={evt => (onRequest(evt, values))}
+          variant="outlined"
+          color="primary"
+          className={classes.button}>
+        Enviar articulo
         </Button>
       </div>
 

@@ -35,6 +35,9 @@ export default ({
     <Route path={routeCreate}>
       <ArticleInfo />
     </Route>
+    <Route path={routeEdit}>
+      <ArticleInfo articleId={articleId} edit />
+    </Route>
     <Route>
       <ArticleInfo articleId={articleId} />
     </Route>
