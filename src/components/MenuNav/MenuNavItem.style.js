@@ -9,7 +9,7 @@ export default theme => ({
   },
   active: {
     '& $link': {
-      color: '#ad8b60',
+      color: theme.palette.primary.main,
     },
   },
 });

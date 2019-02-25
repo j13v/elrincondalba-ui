@@ -4,7 +4,7 @@ export default theme => ({
     color: '#444444',
     fontWeight: 100,
     '&:hover': {
-      color: '#ad8b60',
+      color: theme.palette.primary.main,
     },
   },
 });
