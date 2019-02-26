@@ -34,13 +34,14 @@ export const ArticleItem = ({
   routing,
   images,
   style,
+  className,
   ...restProps
 }) => {
   const classes = useStyles(restProps);
   const [index, setIndex, prev, next] = useSlide();
 
   return (
-    <div className={classes.root} style={style}>
+    <div className={classNames(classes.root, className)} style={style}>
       <div className={classes.media}>
         <ImageCarousel onChange={setIndex} index={index}>
           <LoadableImage

@@ -15,7 +15,7 @@ const Footer = (props) => {
       <div className={classes.main}>
         <Grid container spacing={40}>
 
-          <Grid item xs={20} sm={4} className={classes.links}>
+          <Grid item xs={4} sm={4} md={4} className={classes.links}>
               Enlaces
             <ul>
               <li>
@@ -30,7 +30,7 @@ const Footer = (props) => {
             </ul>
           </Grid>
 
-          <Grid item xs={20} sm={4} className={classes.conditions}>
+          <Grid item xs={4} sm={4} md={4} className={classes.conditions}>
           Terminos y condiciones
             <ul>
               <li>
@@ -41,7 +41,7 @@ const Footer = (props) => {
               </li>
             </ul>
           </Grid>
-          <Grid item xs={20} sm={4}>
+          <Grid item xs={4} sm={4} md={4}>
           Redes sociales
             <Grid
               container
@@ -60,7 +60,7 @@ const Footer = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={20}>
+          <Grid item xs={12} sm={6} md={2}>
             <Grid item>© 2019 El rincón D'Alba</Grid>
           </Grid>
         </Grid>
