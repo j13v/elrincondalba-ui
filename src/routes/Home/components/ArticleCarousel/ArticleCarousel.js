@@ -7,7 +7,7 @@ import styles from './ArticleCarousel.styles';
 
 const FETCH_CATALOG_DATA = gql`
 query getCatalog($cursor: String) {
-  listArticles(first: 4 after: $cursor) {
+  listArticles(last: 4 after: $cursor) {
     edges {
       node {
         id
