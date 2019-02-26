@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 // Global Components
 import Suspense from '@global/components/Suspense';
 import SwitchAnimated from '@global/components/SwitchAnimated';
+import ArticleCarousel from '@global/components/ArticleCarousel';
 // Constants
 import {
   ROUTING_ARTICLE_ORDER,
@@ -62,6 +63,10 @@ export const ArticleView = ({
           </Route>
         </SwitchAnimated>
       </Suspense>
+    </Grid>
+    <Grid item xs={12}>
+      <h2>Artículos similares</h2>
+      <ArticleCarousel />
     </Grid>
   </Grid>
 );

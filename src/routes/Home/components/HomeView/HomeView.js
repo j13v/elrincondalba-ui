@@ -1,6 +1,6 @@
 import React from 'react';
+import ArticleCarousel from '@global/components/ArticleCarousel';
 import ArticleGallery from '../ArticleGallery';
-import ArticleCarousel from '../ArticleCarousel';
 
 
 export const HomeView = props => (
