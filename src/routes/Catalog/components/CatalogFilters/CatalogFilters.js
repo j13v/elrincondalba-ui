@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
-import { useQuery } from '@global/hooks';
+import { useQuery, useQuerystringState } from '@global/hooks';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -10,6 +10,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Slider, { defaultValueReducer } from '@material-ui/lab/Slider';
 import {withErrorBoundary} from '@global/components/ErrorBoundary';
+
 
 /**
  * a value reducer that will snap to multiple of 10 but also to the edge value
@@ -64,12 +65,14 @@ const toggleCategory = (data, value) => {
 export const CatalogFilters = ({
   suspend,
 }) => {
+  const [stateQs, setStateQs] = useQuerystringState();
   const [state, setState] = useState({
     categories: [],
     sizes: [],
     price: 0,
-  });
 
+  });
+  console.log('STATE', stateQs);
   const {
     data: {
       getArticlePriceRange: [priceRangeMin, priceRangeMax],
@@ -95,7 +98,7 @@ export const CatalogFilters = ({
             control={(
               <Checkbox
                 color="primary"
-                checked={state.categories.includes(category)}
+                checked={stateQs.categories.includes(category)}
                 onChange={() => setState({
                   ...state,
                   categories: toggleCategory(state.categories, category),
