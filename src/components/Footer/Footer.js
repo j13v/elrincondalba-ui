@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
+import Link from '../Link';
+import { useRoutes, makeStyles} from '../../hooks';
 import IconFacebook from '../../assets/icons/facebook.svg';
 import IconInstagram from '../../assets/icons/instagram.svg';
 import styles from './Footer.style';
@@ -10,6 +10,8 @@ import styles from './Footer.style';
 const useStyles = makeStyles(styles);
 const Footer = (props) => {
   const classes = useStyles(props);
+  const routes = useRoutes();
+  const navs = routes.filter(({menu}) => menu);
   return (
     <div className={classes.root}>
       <div className={classes.main}>
@@ -17,16 +19,12 @@ const Footer = (props) => {
 
           <Grid item xs={4} sm={4} md={4} className={classes.links}>
               Enlaces
-            <ul>
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="catalogo">Catalogo</Link>
-              </li>
-              <li>
-                <Link href="contacto">Contacto</Link>
-              </li>
+            <ul className={classes.root}>
+              {navs.map(({path, menu}, idx) => (
+                <li key={idx}>
+                  <Link to={path}>{menu}</Link>
+                </li>
+              ))}
             </ul>
           </Grid>
 
