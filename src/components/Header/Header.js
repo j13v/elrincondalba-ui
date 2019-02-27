@@ -5,7 +5,7 @@ import { matchPath, withRouter } from 'react-router';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 // Hooks
-import { useRouter, makeStyles, useWindowScroll } from '../../hooks';
+import { useRoutes, makeStyles, useWindowScroll } from '../../hooks';
 // Local Components
 import Link from '../Link';
 import MenuNav from '../MenuNav';
@@ -18,10 +18,10 @@ import styles from './Header.styles';
 const useStyles = makeStyles(styles);
 // https://media.istockphoto.com/photos/enjoying-freedom-picture-id617358390?s=2048x2048
 // https://media.istockphoto.com/photos/beauty-woman-in-the-straw-in-field-picture-id488962217?s=2048x2048
-function Header({routes, location, ...restProps}) {
+function Header({location, ...restProps}) {
   const classes = useStyles(restProps);
   const position = useWindowScroll({throttle: 100});
-  const router = useRouter();
+  const routes = useRoutes();
   const enableJumbo = window.location.pathname === '/';
   return (
     <div style={{height: enableJumbo ? window.innerHeight : 'auto', minHeight: '64px'}}>
@@ -45,7 +45,7 @@ function Header({routes, location, ...restProps}) {
           <Link className={classes.brand} to="/">
               D'Alba
           </Link>
-          <MenuNav navs={router.routes.filter(({menu}) => menu).map(route => ({
+          <MenuNav navs={routes.filter(({menu}) => menu).map(route => ({
             active: !!matchPath(location.pathname, route),
             link: route.path,
             name: route.menu,

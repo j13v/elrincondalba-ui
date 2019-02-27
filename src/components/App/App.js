@@ -7,7 +7,7 @@ import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 import { ThemeProvider } from '@material-ui/styles';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { AuthorizationProvider } from '../Authorization';
-import Router from '../Router';
+import Routes from '../Routes';
 // Components
 import CssBaseline from '../CssBaseline';
 
@@ -27,7 +27,7 @@ export const App = ({
           <MuiThemeProvider theme={theme}>
             <CssBaseline />
             <Suspense fallback={<div>Loading...</div>}>
-              <Router routes={routes} />
+              <Routes routes={routes} />
             </Suspense>
           </MuiThemeProvider>
         </ThemeProvider>

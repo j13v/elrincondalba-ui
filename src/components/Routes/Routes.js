@@ -3,8 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Switch, Route, matchPath } from 'react-router';
 import SwitchAnimated from '../SwitchAnimated';
 import {useAuthz} from '../../hooks';
-import RouterProvider from './RouterProvider';
-import RouterPropTypes from './RouterPropTypes';
+import RoutesProvider from './RoutesProvider';
+import RoutesPropTypes from './RoutesPropTypes';
 
 const groupBy = function (xs, key) {
   return xs.reduce((rv, x) => {
@@ -17,7 +17,7 @@ const groupByLayout = function (xs) {
   return groupBy(xs, 'layout');
 };
 
-export const RouterLayout = ({routes, children, location}) => {
+export const RoutesLayout = ({routes, children, location}) => {
   const what = Object
     .values(groupByLayout(routes))
     .find(routes => routes
@@ -26,15 +26,13 @@ export const RouterLayout = ({routes, children, location}) => {
   return <Layout>{children}</Layout>;
 };
 
-export const Router = ({routes, layout, ...restProps}) => {
-  // console.log(RouterLayout())
+export const Routes = ({routes, layout, ...restProps}) => {
+  // console.log(RoutesLayout())
   const authz = useAuthz();
   return (
-    <RouterProvider routes={{
-      routes: routes.filter(({roles}) => !roles || authz.can(roles)),
-    }}>
+    <RoutesProvider routes={routes.filter(({roles}) => !roles || authz.can(roles))}>
       <BrowserRouter>
-        <RouterLayout routes={routes}>
+        <RoutesLayout routes={routes}>
           <SwitchAnimated>
             {routes.map(({
               component: Component,
@@ -54,18 +52,18 @@ export const Router = ({routes, layout, ...restProps}) => {
                 {...restRouteProps} />
             )))}
           </SwitchAnimated>
-        </RouterLayout>
+        </RoutesLayout>
       </BrowserRouter>
-    </RouterProvider>
+    </RoutesProvider>
   );
 };
 
-Router.propTypes = {
-  ...RouterPropTypes,
+Routes.propTypes = {
+  ...RoutesPropTypes,
 };
 
-Router.defaultProps = {
+Routes.defaultProps = {
   layout: ({children}) => <div>{children}</div>,
 };
 
-export default Router;
+export default Routes;
