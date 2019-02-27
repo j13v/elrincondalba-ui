@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 // Local Components
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import withStyles from '../../styles/withStyles';
+import Breadcrumbs from '../../components/Breadcrumbs';
 // Styles
 import styles from './LayoutMain.style';
 
@@ -18,7 +18,10 @@ export const LayoutMain = ({children, ...restProps}) => {
   return (
     <div className={classes.root}>
       <Header className={classes.header} />
-      <div className={classes.container}>{children}</div>
+      <div className={classes.container}>
+        <div className={classes.breadcrumbs}><Breadcrumbs /></div>
+        {children}
+      </div>
       <Footer className={classes.footer} />
     </div>
   );

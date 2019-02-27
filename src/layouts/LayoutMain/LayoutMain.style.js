@@ -19,4 +19,7 @@ export default theme => ({
       marginRight: 'auto',
     },
   },
+  breadcrumbs: {
+    margin: '10px 0',
+  },
 });
