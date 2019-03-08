@@ -3,7 +3,6 @@ import OrdersTable from '../OrdersTable';
 
 export default () => (
   <div>
-Pedidos
     <OrdersTable />
   </div>
 );

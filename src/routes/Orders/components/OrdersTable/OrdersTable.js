@@ -1,18 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import gql from 'graphql-tag';
 import {withGraphQL} from '@global/utils/relay';
 import { withStyles } from '@material-ui/core/styles';
+import IconCancel from '@material-ui/icons/Cancel';
+import IconUpdate from '@material-ui/icons/Update';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
+import Modal from '@material-ui/core/Modal';
 import moment from 'moment';
 import 'moment/locale/es';
 import {
   AutoSizer, Column, SortDirection, Table,
 } from 'react-virtualized';
+import OrderShipForm from '../OrderShipForm';
+import OrderCancelForm from '../OrderCancelForm';
 
 moment.locale('es');
 const ORDERS = gql`
@@ -206,20 +211,6 @@ const data = [
   ['Gingerbread', 356, 16.0, 49, 3.9],
 ];
 
-let id = 0;
-function createData(dessert, calories, fat, carbs, protein) {
-  id += 1;
-  return {
-    id, dessert, calories, fat, carbs, protein,
-  };
-}
-
-const rows = [];
-
-for (let i = 0; i < 200; i += 1) {
-  const randomSelection = data[Math.floor(Math.random() * data.length)];
-  rows.push(createData(...randomSelection));
-}
 const stateEnum = [
   'PENDIENTE',
   'PAGADO',
@@ -229,19 +220,31 @@ const stateEnum = [
   'CANCELADO',
 ];
 
+const stateForms = [
+  OrderShipForm,
+  OrderCancelForm,
+];
 
-function OrdersTable({orders}) {
+const OrdersTable = ({orders}) => {
+  const [state, setState] = useState(false);
   if (!orders) {
     return 'Data not loaded';
   }
-  const data = orders.map(order => ({
-    ...order,
-    state: <Chip label={stateEnum[order.state]} style={{backgroundColor: order.state === 5 ? 'red' : 'auto'}} />,
-    user: order.user.name,
-    article: order.stock.article.name,
-    size: order.stock.size,
-    createdAt: moment.unix(order.createdAt).format('LLL'),
-  }));
+  const data = orders.map((order) => {
+    const orderState = Math.floor(Math.random() * stateEnum.length);
+    return ({
+      ...order,
+      state: <Chip label={stateEnum[orderState]} style={{backgroundColor: orderState === 5 ? 'red' : 'auto'}} />,
+      user: order.user.name,
+      article: order.stock.article.name,
+      size: order.stock.size,
+      createdAt: moment.unix(order.createdAt).format('LLL'),
+      update: <IconUpdate onClick={evt => (console.log('JORGE', stateForms[orderState + 3]) || setState(true))} />,
+      delete: <IconCancel onClick={event => console.log('Boton Delete', event.rowGetter)} />,
+
+
+    });
+  });
   return (
     <Paper style={{ height: 400, width: '100%' }}>
       <WrappedVirtualizedTable
@@ -287,11 +290,40 @@ function OrdersTable({orders}) {
             label: 'Fecha',
             dataKey: 'createdAt',
           },
+          {
+            width: 120,
+
+            label: 'Actualizar estado',
+            dataKey: 'update',
+          },
+          {
+            width: 120,
+
+            label: 'Eliminar',
+            dataKey: 'delete',
+          },
         ]}
       />
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={state}
+        onClose={() => (setState(false))}
+        >
+        <div style={{
+          position: 'absolute',
+          width: 100,
+          backgroundColor: 'white',
+          padding: 8,
+          outline: 'none',
+        }}>
+          <OrderShipForm />
+
+        </div>
+      </Modal>
     </Paper>
   );
-}
+};
 
 export default withGraphQL(ORDERS, ({
   listOrders: orders,

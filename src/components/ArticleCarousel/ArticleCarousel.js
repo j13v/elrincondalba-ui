@@ -38,7 +38,7 @@ export const ArticleCarousel = (props) => {
   const articles = flattenEdges(data.listArticles);
   return (
     <div className={classes.root}>
-      {articles.map(article => (
+      {(articles || []).map(article => (
         <ArticleItem
           key={article.id}
           className={classes.item}
