@@ -232,7 +232,7 @@ const OrdersTable = ({orders}) => {
       size: order.stock.size,
       createdAt: moment.unix(order.createdAt).format('LLL'),
       update: <IconUpdate onClick={evt => (console.log('JORGE', stateForms[orderState + 3]) || setState(true))} />,
-      delete: <IconCancel onClick={evt => console.log('Boton Delete', order.id)} />,
+      delete: <IconCancel onClick={evt => console.log('Cancelar pedido', stateForms[orderState]) || setState(true)} />,
 
 
     });
