@@ -203,14 +203,6 @@ MuiVirtualizedTable.defaultProps = {
 
 const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
-const data = [
-  ['Frozen yoghurt', 159, 6.0, 24, 4.0],
-  ['Ice cream sandwich', 237, 9.0, 37, 4.3],
-  ['Eclair', 262, 16.0, 24, 6.0],
-  ['Cupcake', 305, 3.7, 67, 4.3],
-  ['Gingerbread', 356, 16.0, 49, 3.9],
-];
-
 const stateEnum = [
   'PENDIENTE',
   'PAGADO',
@@ -240,7 +232,7 @@ const OrdersTable = ({orders}) => {
       size: order.stock.size,
       createdAt: moment.unix(order.createdAt).format('LLL'),
       update: <IconUpdate onClick={evt => (console.log('JORGE', stateForms[orderState + 3]) || setState(true))} />,
-      delete: <IconCancel onClick={event => console.log('Boton Delete', event.rowGetter)} />,
+      delete: <IconCancel onClick={evt => console.log('Boton Delete', order.id)} />,
 
 
     });
@@ -250,7 +242,7 @@ const OrdersTable = ({orders}) => {
       <WrappedVirtualizedTable
         rowCount={data.length}
         rowGetter={({ index }) => data[index]}
-        onRowClick={event => console.log(event)}
+        onRowClick={evt => console.log(evt)}
         columns={[
           {
             width: 200,
