@@ -1,1 +1,1 @@
-export { default } from './OrderShipForm';
+export { default, OrderShipFormConfirmAction} from './OrderShipForm';

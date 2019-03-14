@@ -8,35 +8,33 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import styles from './OrderShipForm.style';
+import styles from './OrderPrepareForm.style';
 
-const SHIP_ORDER = gql`
-mutation ($id: ObjectID!, $trackingRef: String!) {
-  shipOrder(
-    id: $id,
-    trackingRef: $trackingRef)
-    {
-      id
-    }
+const PREPARE_ORDER = gql`
+mutation ($id: ObjectID!) {
+  prepareOrder(
+    id: $id
+    )
 }
+
 `;
 
-
 const useStyles = makeStyles(styles);
-export const OrderShipForm = ({
+export const OrderPrepareForm = ({
   ...restProps
 }) => {
-
   const classes = useStyles(restProps);
   return (
     <div>
       <Typography>
-            Este estado se actualizará de preparado a enviado(ship)
+            Escribe el mensaje dirigido al cliente, confirmado la tramitacion de su pedido
       </Typography>
       <TextField
-        label="TrackNumber"
+        label="Mensaje"
         className={classes.textField}
         name="trackNumber"
+        multiline
+        rowsMax="4"
         margin="normal"
         variant="outlined"
         required
@@ -47,7 +45,7 @@ export const OrderShipForm = ({
   );
 };
 
-export const OrderShipFormConfirmAction = ({
+export const OrderPrepareFormConfirmAction = ({
   id,
   value: trackingRef,
   suspend,
@@ -56,10 +54,10 @@ export const OrderShipFormConfirmAction = ({
   onError,
   ...restProps
 }) => {
-  const shipOrder = useMutation(SHIP_ORDER, {suspend});
+  const prepareOrder = useMutation(PREPARE_ORDER, {suspend});
   const handleConfirm = () => {
     console.log('ID - TRacking', id, trackingRef);
-    shipOrder({
+    prepareOrder({
       variables: {
         id,
         trackingRef,
@@ -72,4 +70,4 @@ export const OrderShipFormConfirmAction = ({
     </Button>
   );
 };
-export default OrderShipForm;
+export default OrderPrepareForm;

@@ -32,10 +32,10 @@ const Footer = (props) => {
           Terminos y condiciones
             <ul>
               <li>
-                <Link href="/">POLÍTICA DE PRIVACIDAD</Link>
+                <Link to="/">POLÍTICA DE PRIVACIDAD</Link>
               </li>
               <li>
-                <Link href="/">CONDICIONES DE COMPRA</Link>
+                <Link to="/">CONDICIONES DE COMPRA</Link>
               </li>
             </ul>
           </Grid>
