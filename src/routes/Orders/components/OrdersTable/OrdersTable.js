@@ -22,6 +22,8 @@ import 'moment/locale/es';
 import WrappedVirtualizedTable from '@global/components/VirtualizedTable';
 import OrderPrepareForm, {OrderPrepareFormConfirmAction} from '../OrderPrepareForm';
 import OrderShipForm, {OrderShipFormConfirmAction} from '../OrderShipForm';
+import OrderPurchaseForm, {OrderPurchaseFormConfirmAction} from '../OrderPurchaseForm';
+import OrderConfirmForm, {OrderConfirmFormConfirmAction} from '../OrderConfirmForm';
 import OrderCancelForm, {OrderCancelFormConfirmAction} from '../OrderCancelForm';
 
 
@@ -61,18 +63,25 @@ const stateEnum = [
 ];
 
 const stateDialogTitles = [
+  'Pagar pedido',
   'Preparar pedido',
   'Enviar pedido',
+  'Confirmar pedido',
 ];
 
 const stateForms = [
+  OrderPurchaseForm,
   OrderPrepareForm,
   OrderShipForm,
+  OrderConfirmForm,
 ];
 
 const stateFormsAction = [
+  OrderPurchaseFormConfirmAction,
   OrderPrepareFormConfirmAction,
   OrderShipFormConfirmAction,
+  OrderConfirmFormConfirmAction,
+
 ];
 
 
@@ -131,27 +140,32 @@ const columnsDefinitions = [
 
 
 const mapOrders = (orders, onAction) => orders.map((order, idx) => {
-  const orderState = order.state = idx % stateEnum.length;
-  const isCancelled = orderState !== stateEnum.length - 1;
+  const isEndStateFlow = order.state >= stateEnum.length - 2;
+  const isCancelable = order.state < stateEnum.length - 2;
   return ({
     ...order,
-    state: <Chip label={stateEnum[orderState]} style={{backgroundColor: orderState === 5 ? 'red' : 'auto'}} />,
+    state: <Chip label={stateEnum[order.state]} style={{backgroundColor: order.state === 5 ? 'red' : 'auto'}} />,
     user: order.user.name,
     article: order.stock.article.name,
     size: order.stock.size,
     createdAt: moment.unix(order.createdAt).format('LLL'),
     update:
-  <IconButton disabled={!isCancelled} onClick={evt => onAction(order)}>
+  <IconButton disabled={isEndStateFlow} onClick={evt => onAction(order)}>
     <IconUpdate />
   </IconButton>,
     cancel:
-  <IconButton disabled={!isCancelled} onClick={evt => onAction(order, -1)}>
+  <IconButton disabled={!isCancelable} onClick={evt => onAction(order, -1)}>
     <IconCancel />
   </IconButton>,
   });
 });
 
-const OrdersTable = ({orders, suspend, ...restProps}) => {
+const OrdersTable = ({
+  orders,
+  suspend,
+  onActionSuccess,
+  ...restProps
+}) => {
 
   const [state, setState] = useState({});
   const [value, setValue] = useState('');
@@ -161,15 +175,26 @@ const OrdersTable = ({orders, suspend, ...restProps}) => {
 
   const dialogTitle = actionIndex === -1 ? 'Cancelar producto' : stateDialogTitles[actionIndex];
 
-  const handleClose = () => {
+  const handleClose = (evt) => {
     setState({});
+  };
+
+  const handleSucces = (evt, ...args) => {
+    onActionSuccess().then(() => {
+      handleClose(evt);
+    }, (err) => {
+      console.error(err);
+    });
   };
   if (!orders) {
     return 'Data not loaded';
   }
 
   const data = mapOrders(orders, (order, isCancel) => {
-    setState({order, action: isCancel || (order.state - 1)});
+    setState({
+      order,
+      action: isCancel || (order.state),
+    });
   });
   return (
     <Paper style={{ height: 400, width: '100%' }}>
@@ -201,7 +226,7 @@ const OrdersTable = ({orders, suspend, ...restProps}) => {
           <DialogComponentActionConfirm
             id={state.order.id}
             value={value}
-            onSuccess={handleClose}
+            onSuccess={handleSucces}
             onError={console.error()}
           />
         </DialogActions>
@@ -215,4 +240,6 @@ export default withGraphQL(ORDERS, ({
   listOrders: orders,
 }) => ({
   orders,
+}), ({refetch}) => ({
+  onActionSuccess: refetch,
 }))(OrdersTable);

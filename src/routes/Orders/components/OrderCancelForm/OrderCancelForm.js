@@ -15,7 +15,9 @@ const CANCEL_ORDER = gql`
 mutation($id: ObjectID!){
   cancelOrder(
     id: $id
-  )
+  ){
+    id
+  }
 }`;
 
 const useStyles = makeStyles(styles);
@@ -54,8 +56,7 @@ export const OrderCancelFormConfirmAction = ({
   ...restProps
 }) => {
   const cancelOrder = useMutation(CANCEL_ORDER, {suspend});
-  const handleConfirm = (id) => {
-    console.log('ID CANCEL', id);
+  const handleConfirm = () => {
     cancelOrder({
       variables: {
         id,

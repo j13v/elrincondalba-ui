@@ -8,11 +8,11 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import styles from './OrderPrepareForm.style';
+import styles from './OrderConfirmForm.style';
 
-const PREPARE_ORDER = gql`
+const CONFIRM_ORDER = gql`
 mutation ($id: ObjectID!) {
-  prepareOrder(
+  confirmReceived(
     id: $id
     ){
       id
@@ -22,7 +22,7 @@ mutation ($id: ObjectID!) {
 `;
 
 const useStyles = makeStyles(styles);
-export const OrderPrepareForm = ({
+export const OrderConfirmForm = ({
   ...restProps
 }) => {
   const classes = useStyles(restProps);
@@ -47,7 +47,7 @@ export const OrderPrepareForm = ({
   );
 };
 
-export const OrderPrepareFormConfirmAction = ({
+export const OrderConfirmFormConfirmAction = ({
   id,
   value: trackingRef,
   suspend,
@@ -56,13 +56,11 @@ export const OrderPrepareFormConfirmAction = ({
   onError,
   ...restProps
 }) => {
-  const prepareOrder = useMutation(PREPARE_ORDER, {suspend});
+  const confirmOrder = useMutation(CONFIRM_ORDER, {suspend});
   const handleConfirm = () => {
-    console.log('ID - TRacking', id, trackingRef);
-    prepareOrder({
+    confirmOrder({
       variables: {
         id,
-        trackingRef,
       },
     }).then(onSuccess, onError);
   };
@@ -72,4 +70,4 @@ export const OrderPrepareFormConfirmAction = ({
     </Button>
   );
 };
-export default OrderPrepareForm;
+export default OrderConfirmForm;

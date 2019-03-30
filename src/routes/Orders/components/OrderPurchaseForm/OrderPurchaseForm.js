@@ -8,12 +8,14 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import styles from './OrderPrepareForm.style';
+import styles from './OrderPurchaseForm.style';
 
-const PREPARE_ORDER = gql`
+const PURCHASE_ORDER = gql`
 mutation ($id: ObjectID!) {
-  prepareOrder(
-    id: $id
+  purchaseOrder(
+    id: $id,
+    paymentMethod: 0,
+    paymentRef: "1234"
     ){
       id
     }
@@ -22,7 +24,7 @@ mutation ($id: ObjectID!) {
 `;
 
 const useStyles = makeStyles(styles);
-export const OrderPrepareForm = ({
+export const OrderPurchaseForm = ({
   ...restProps
 }) => {
   const classes = useStyles(restProps);
@@ -47,7 +49,7 @@ export const OrderPrepareForm = ({
   );
 };
 
-export const OrderPrepareFormConfirmAction = ({
+export const OrderPurchaseFormConfirmAction = ({
   id,
   value: trackingRef,
   suspend,
@@ -56,13 +58,11 @@ export const OrderPrepareFormConfirmAction = ({
   onError,
   ...restProps
 }) => {
-  const prepareOrder = useMutation(PREPARE_ORDER, {suspend});
+  const purchaseOrder = useMutation(PURCHASE_ORDER, {suspend});
   const handleConfirm = () => {
-    console.log('ID - TRacking', id, trackingRef);
-    prepareOrder({
+    purchaseOrder({
       variables: {
         id,
-        trackingRef,
       },
     }).then(onSuccess, onError);
   };
@@ -72,4 +72,4 @@ export const OrderPrepareFormConfirmAction = ({
     </Button>
   );
 };
-export default OrderPrepareForm;
+export default OrderPurchaseForm;
