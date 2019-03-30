@@ -1,34 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import MuiBreadcrumbs from '@material-ui/lab/Breadcrumbs';
-import { Switch, Route, matchPath } from 'react-router';
-import Typography from '@material-ui/core/Typography';
 import {parseHistoryStack, capitalize} from '../../utils/helpers';
-import {useRoutes, useRouter} from '../../hooks';
+import {useRouter} from '../../hooks';
 import Link from '../Link';
 
 export const Breadcrumbs = () => {
-  const routes = useRoutes();
   const router = useRouter();
   const [history, setHistory] = useState([]);
 
-  useEffect(() => router.history.listen((location) => {
-    if (location) {
+  useEffect(() => router.history.listen(location => setHistory([...history, location])));
 
-      return setHistory([...history, location]);
-    }
-    console.log('what?', location);
-    return null;
-  }));
-
-  // useEffect(() => {
-  //   setHistory([]);
-  //   console.log('reset');
-  // }, [router.location.pathname.split(/\//).length === 2]);
-  // // console.log(router.location.pathname.split(/\//).length);
-
-  // const route = routes.find(route => matchPath(window.location.pathname, route));
   const historyFilteredStack = parseHistoryStack(history.concat([router.location]));
+
   return (
     <MuiBreadcrumbs arial-label="Breadcrumb">
       <Link color="inherit" to="/">
@@ -44,12 +27,22 @@ export const Breadcrumbs = () => {
             </Link>);
         })
       }
-      {/* <Link color="primary" to={router.location.pathname}>
-        {capitalize(router.location.pathname.split(/\/+/ig).slice(-1)[0])}
-      </Link> */}
     </MuiBreadcrumbs>
   );
 };
+
+export default Breadcrumbs;
+
+// useEffect(() => {
+//   setHistory([]);
+//   console.log('reset');
+// }, [router.location.pathname.split(/\//).length === 2]);
+// // console.log(router.location.pathname.split(/\//).length);
+
+// const route = routes.find(route => matchPath(window.location.pathname, route));
+/* <Link color="primary" to={router.location.pathname}>
+        {capitalize(router.location.pathname.split(/\/+/ig).slice(-1)[0])}
+      </Link> */
 
 // route
 //         && route.menu ? (
@@ -61,5 +54,3 @@ export const Breadcrumbs = () => {
 //               {capitalize(urlFormat(chunk, router.match.params))}
 //             </Link>
 //           ))}
-
-export default Breadcrumbs;
