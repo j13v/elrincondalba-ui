@@ -13,9 +13,11 @@ import styles from './ArticleGalleryCarousel.styles';
 export const useStyles = makeStyles(styles);
 
 export const ArticleGalleryCarousel = ({
+  edit,
   images,
   selected = 0,
   onChange,
+  onAddImage,
   ...restProps
 }) => {
   const classes = useStyles(restProps);
@@ -41,18 +43,28 @@ export const ArticleGalleryCarousel = ({
     setSelected(evt, idx);
   };
 
-  return images.map((src, idx) => (
-    <LoadableImage
-      onClick={handleClick(idx)}
-      key={idx}
-      image={src}
-      style={{
-        height: '100px',
-        width: '100%',
-        filter: idx === selected ? 'none' : 'brightness(50%)',
-        cursor: 'pinter',
-      }} />
-  ));
+
+  return (
+    <div className={classes.root}>
+      {images.map((src, idx) => (
+        <LoadableImage
+          key={idx}
+          image={src}
+          onClick={handleClick(idx)}
+          className={classNames(classes.image, {
+            [classes.selected]: idx === selected,
+          })}
+       />
+      ))}
+      {edit && (
+        (new Array(6 - images.length)).fill(null).map(() => (
+          <button
+            type="button"
+            className={classNames(classes.image, classes.add)}
+            onClick={onAddImage} />
+        )))}
+    </div>
+  );
 };
 
 ArticleGalleryCarousel.propTypes = {

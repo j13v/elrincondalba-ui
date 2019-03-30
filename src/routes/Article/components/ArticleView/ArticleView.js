@@ -46,9 +46,15 @@ export const ArticleView = ({
     <Grid item xs={6}>
       <Suspense>
         <SwitchAnimated>
-          <Route path={ROUTING_ARTICLE_ORDER}>
-            <ArticleOrderForm onRequest={console.log} stock="asdadsasd" />
-          </Route>
+          <Route
+            path={ROUTING_ARTICLE_ORDER}
+            component={({
+              match: {
+                params: {
+                  stockId,
+                },
+              },
+            }) => <ArticleOrderForm stock={stockId} />} />
           <Route path={ROUTING_ARTICLE_STOCK}>
             <ArticleStock articleId={articleId} />
           </Route>

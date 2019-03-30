@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
@@ -26,11 +26,10 @@ const useStyles = makeStyles(theme => ({
 
 function ArticleOrderForm({
   stock,
-  onRequest,
   ...restProps
 }) {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     name: '',
     surname: '',
     email: '',
@@ -136,12 +135,10 @@ function ArticleOrderForm({
         Enviar articulo
         </Button>
       </div>
-
     </div>
   );
 }
 ArticleOrderForm.propTypes = {
-  onRequest: PropTypes.func.isRequired,
   stock: PropTypes.string.isRequired,
 };
 export default ArticleOrderForm;
