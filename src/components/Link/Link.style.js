@@ -7,4 +7,10 @@ export default theme => ({
       color: theme.palette.primary.main,
     },
   },
+  colorPrimary: {
+    color: theme.palette.primary.main,
+  },
+  colorSecondary: {
+    color: theme.palette.secondary.main,
+  },
 });

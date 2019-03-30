@@ -2,21 +2,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import classNames from 'classnames';
-import {Link} from 'react-router-dom';
-import {urlFormat} from '../../utils/helpers';
+import {Link as RouterLink} from 'react-router-dom';
+import {urlFormat, capitalize} from '../../utils/helpers';
 import styles from './Link.style';
 
 
 const useStyles = makeStyles(styles);
 
-export default ({
+export const Link = ({
   className,
-  classes,
   params,
+  color,
   to,
   ...restProps
 }) => {
-  const cls = useStyles({classes});
+  const classes = useStyles(restProps);
 
-  return <Link className={classNames(cls.root, className)} to={params ? urlFormat(to, params) : to} {...restProps} />;
+  return (
+    <RouterLink
+      className={classNames(
+        classes.root,
+        classes[`color${capitalize(color)}`],
+        className
+      )}
+      to={params ? urlFormat(to, params) : to}
+      {...restProps} />
+  );
 };
+
+Link.propTypes = {
+  color: PropTypes.oneOf(['inherit', 'primary', 'secondary']),
+};
+
+Link.defaultProps = {
+  color: 'inherit',
+};
+
+export default Link;
