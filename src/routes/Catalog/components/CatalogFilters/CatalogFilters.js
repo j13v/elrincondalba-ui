@@ -10,6 +10,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Slider, { defaultValueReducer } from '@material-ui/lab/Slider';
 import {withErrorBoundary} from '@global/components/ErrorBoundary';
+import { getDefaultValues } from 'apollo-utilities';
 
 
 /**
@@ -62,17 +63,46 @@ const toggleCategory = (data, value) => {
   return data;
 };
 
+const MAP_STATE_KEYS = {
+  categories: 'categorias',
+  priceRange: 'rangoPrecio',
+  sizes: 'tallas',
+};
+
+const parseArray = value => value.split(',').filter(Boolean);
+const parseFloatArray = value => parseArray(value).map(parseFloat);
+const stringifyArray = value => value.join(',');
+
+const MAP_PARSE_STATE_KEYS = {
+  categories: parseArray,
+  sizes: parseArray,
+  priceRange: parseFloatArray,
+};
+
+const MAP_STRINGIFY_STATE_KEYS = {
+  categories: stringifyArray,
+  sizes: stringifyArray,
+  priceRange: stringifyArray,
+};
+
+const getValueFromObject = (map, key, value) => (map[key] ? map[key](value) : value);
+
+const isChecked = (data = [], value) => data.findIndex(selected => selected.toLowerCase() === value.toLowerCase()) !== -1;
+
 export const CatalogFilters = ({
+  onChange,
   suspend,
 }) => {
-  const [stateQs, setStateQs] = useQuerystringState();
-  const [state, setState] = useState({
+  const [state, setState] = useQuerystringState({
     categories: [],
     sizes: [],
-    price: 0,
-
+    priceRange: [],
+  }, {
+    keys: MAP_STATE_KEYS,
+    stringify: (value, key) => getValueFromObject(MAP_STRINGIFY_STATE_KEYS, key, value),
+    parse: (value, key) => getValueFromObject(MAP_PARSE_STATE_KEYS, key, value),
   });
-  console.log('STATE', stateQs);
+
   const {
     data: {
       getArticlePriceRange: [priceRangeMin, priceRangeMax],
@@ -81,13 +111,26 @@ export const CatalogFilters = ({
     }, error,
   } = useQuery(FETCH_CATALOG_DATA, {suspend});
 
+  const handleChange = name => (evt) => {
+    const newState = {
+      ...state,
+      [name]: toggleCategory(state[name], evt.target.value),
+    };
+    onChange(evt, newState);
+    setState(newState);
+  };
+
+  useEffect(() => {
+    onChange(null, state);
+  }, [true]);
+
   return (
     <div>
       <h3>Categorias</h3>
       <FormControl component="fieldset">
         <FormGroup row>
           {
-        categories.map((category, idx) => (
+        categories.map(({name}, idx) => (
           <FormControlLabel
             style={{
               width: '50%',
@@ -98,13 +141,10 @@ export const CatalogFilters = ({
             control={(
               <Checkbox
                 color="primary"
-                checked={stateQs.categories.includes(category)}
-                onChange={() => setState({
-                  ...state,
-                  categories: toggleCategory(state.categories, category),
-                })}
-                value={category} />)}
-            label={category} />
+                checked={isChecked(state.categories, category)}
+                onChange={handleChange('categories')}
+                value={name} />)}
+            label={name} />
         ))}
         </FormGroup>
       </FormControl>
@@ -123,12 +163,9 @@ export const CatalogFilters = ({
             control={(
               <Checkbox
                 color="primary"
-                checked={state.categories.includes(size)}
-                onChange={() => setState({
-                  ...state,
-                  categories: toggleCategory(state.categories, size),
-                })}
-                value={size} />)}
+                checked={isChecked(state.sizes, size)}
+                onChange={handleChange('sizes')}
+                value={size.toLowerCase()} />)}
             label={size} />
         ))}
         </FormGroup>
@@ -139,14 +176,14 @@ export const CatalogFilters = ({
         <span>{priceRangeMax}</span>
       </div>
       <Slider
-        value={state.price}
+        value={state.priceRange[0]}
         valueReducer={valueReducer}
         min={priceRangeMin}
         max={priceRangeMax}
         step={10}
         onChange={(evt, value) => setState({
           ...state,
-          price: value,
+          priceRange: [value],
         })} />
 
     </div>
@@ -155,9 +192,11 @@ export const CatalogFilters = ({
 
 CatalogFilters.propTypes = {
   suspend: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 CatalogFilters.defaultProps = {
   suspend: true,
+  onChange: noop => noop,
 };
 export default withErrorBoundary(CatalogFilters);

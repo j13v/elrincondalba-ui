@@ -1,5 +1,5 @@
 // Core
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { makeStyles } from '@material-ui/styles';
@@ -15,21 +15,30 @@ import CatalogTabs from '../CatalogTabs';
 import CatalogArticleGrid from '../CatalogArticleGrid';
 
 
-export const CatalogView = props => (
-  <Grid container spacing={16} style={{marginTop: '1em'}}>
-    <Grid item xs={12} md={3}>
-      <Suspense>
-        <CatalogFilters />
-      </Suspense>
+export const CatalogView = (props) => {
+  const [filters, setFilters] = useState({});
+
+  const handleChange = (_, filters) => {
+    setFilters(filters);
+  };
+
+  return (
+    <Grid container spacing={16} style={{marginTop: '1em'}}>
+      <Grid item xs={12} md={3}>
+        <Suspense>
+          <CatalogFilters onChange={handleChange} />
+        </Suspense>
+      </Grid>
+      <Grid item sm={12} md={9}>
+        <CatalogTabs style={{paddingBottom: '1rem'}} />
+        <Suspense>
+          <CatalogArticleGrid filters={filters} routing={ROUTING_ARTICLE} />
+        </Suspense>
+      </Grid>
     </Grid>
-    <Grid item sm={12} md={9}>
-      <CatalogTabs style={{paddingBottom: '1rem'}} />
-      <Suspense>
-        <CatalogArticleGrid routing={ROUTING_ARTICLE} />
-      </Suspense>
-    </Grid>
-  </Grid>
-);
+  );
+
+};
 export default CatalogView;
 
 

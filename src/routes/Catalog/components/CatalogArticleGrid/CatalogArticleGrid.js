@@ -9,8 +9,16 @@ import {withErrorBoundary} from '@global/components/ErrorBoundary';
 import CatalogArticleGridItem from './CatalogArticleGridItem';
 
 const FETCH_CATALOG_DATA = gql`
-query getCatalog($cursor: String) {
-  listArticles(first: 5 after: $cursor) {
+query getCatalog(
+  $categories: [String],
+  $priceRange: [Float],
+  $sizes: [String]
+) {
+  listArticles(
+    categories: $categories
+    priceRange: $priceRange
+    sizes: $sizes
+  ) {
     edges {
       node {
         id
@@ -36,12 +44,18 @@ query getCatalog($cursor: String) {
 export const CatalogArticleGrid = ({
   suspend,
   routing,
+  filters,
 }) => {
   const {
     data: {
       listArticles: articles,
     }, error, ...restProps
-  } = useQuery(FETCH_CATALOG_DATA, {suspend});
+  } = useQuery(FETCH_CATALOG_DATA, {
+    variables: {
+      ...filters,
+    },
+    suspend,
+  });
 
   return (
     <Grid container spacing={16}>
