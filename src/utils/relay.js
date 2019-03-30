@@ -12,7 +12,7 @@ export const mapEdges = (data, iterator = a => (a), dst = {}) => {
   return dst;
 };
 
-export const flattenEdges = value => value && value.edges && value.edges.map(({node}) => node);
+export const flattenEdges = value => (value && value.edges ? value.edges.map(({node}) => node) : []);
 
 export const flattenPropsEdges = (data, dst = {}) => {
   for (let keys = Object.keys(data), i = 0; i < keys.length; i++) {
