@@ -57,9 +57,9 @@ query($articleId: ObjectID!){
     price
     rating
     stock {
-      count
-      refs
+      id
       size
+      createdAt
     }
     createdAt
     updatedAt
@@ -87,6 +87,7 @@ export const ArticleInfo = ({
     },
     error,
   } = useQuery(GET_ARTICLE_BY_ID, {variables: {articleId}, suspend});
+
   const [state, setState] = useState({...article});
   const [selectedSize, setSelectedSize] = useState();
 
@@ -126,9 +127,8 @@ export const ArticleInfo = ({
     console.log(index);
   };
 
-
   const selectedStockId = getSelectedStockBySize(state.stock, selectedSize);
-  console.log(selectedStockId);
+
   return (
     <div style={{position: 'relative'}}>
       <ContentEditable
@@ -171,7 +171,7 @@ export const ArticleInfo = ({
         onChange={handleSizeSelectorChange}
         sizes={parseSizes(sizes).map(item => ({
           ...item,
-          disabled: !isAvailableSize(state.stock, item.label),
+          disabled: !isAvailableSize(state.stock, item.label.toLowerCase()),
         }))} />
 
       <ContentEditable
@@ -181,8 +181,7 @@ export const ArticleInfo = ({
         editable={isEditing}
         maxLength={250}
         multiLine
-        onChange={handleChange('description')}
-            />
+        onChange={handleChange('description')} />
 
       <div style={{display: 'flex', justifyContent: 'space-between'}}>
         {edit ? (
@@ -218,7 +217,7 @@ export const ArticleInfo = ({
             disabled={!selectedStockId}
             params={{
               articleId,
-              stockId: state.stock[0].refs[0],
+              stockId: state.stock[0].id,
             }}>
             Solicitar Articulo
           </ButtonLink>

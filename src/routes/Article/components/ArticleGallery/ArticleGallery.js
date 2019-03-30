@@ -49,6 +49,7 @@ export const ArticleGallery = ({
     },
     error,
   } = useQuery(GET_ARTICLE_IMAGES_BY_ID, {variables: {articleId}, suspend});
+
   const [selectedImage, setSelectedImage] = useState(articleImages.length ? 0 : -1);
   const [images, setImages] = useState(articleImages.map(image => `/images/${image}`));
 

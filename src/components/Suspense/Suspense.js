@@ -1,5 +1,7 @@
-import React, {Suspense as ReactSuspense} from 'react';
+import React, { Suspense as ReactSuspense } from 'react';
 import PropTypes from 'prop-types';
+import { withErrorBoundary } from '../ErrorBoundary';
+
 
 export const Suspense = props => (<ReactSuspense {...props} />);
 
@@ -11,4 +13,4 @@ Suspense.defaultProps = {
   fallback: (<div>Loading</div>),
 };
 
-export default Suspense;
+export default withErrorBoundary(Suspense);
