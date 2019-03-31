@@ -23,11 +23,9 @@ export const CatalogView = (props) => {
   };
 
   return (
-    <Grid container spacing={16} style={{marginTop: '1em'}}>
+    <Grid container spacing={8} style={{marginTop: '1em'}}>
       <Grid item xs={12} md={3}>
-        <Suspense>
-          <CatalogFilters onChange={handleChange} />
-        </Suspense>
+        <CatalogFilters onChange={handleChange} />
       </Grid>
       <Grid item sm={12} md={9}>
         <CatalogTabs style={{paddingBottom: '1rem'}} />

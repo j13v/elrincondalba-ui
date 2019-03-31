@@ -11,3 +11,5 @@ export const parseHistoryStack = stack => stack
     }
     return true;
   }).reverse();
+
+export const isChecked = (data = [], value) => data.findIndex(name => name.toLowerCase() === value.toLowerCase()) !== -1;
