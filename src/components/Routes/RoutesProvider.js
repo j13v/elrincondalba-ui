@@ -6,7 +6,7 @@ export const RoutesProvider = ({
   routes = [],
   children,
 }) => (
-  <RoutesContext.Provider value={console.log(routes) || routes}>
+  <RoutesContext.Provider value={routes}>
     {children}
   </RoutesContext.Provider>
 );

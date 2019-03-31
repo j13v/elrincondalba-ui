@@ -116,21 +116,26 @@ const authz = {
   apply: defineAbilitiesFor,
   resolver: (cb = a => a) => {
     const accessToken = localStorage.getItem('token');
-    console.log(accessToken);
     if (accessToken) {
       cb(require('jwt-decode')(localStorage.getItem('token')));
     }
   },
 };
 
-ReactDOM.render(
-  <App
-    client={client}
-    authz={authz}
-    routes={createRoutes(routes)()}
-    theme={theme} />,
-  document.getElementById('root'),
-);
+ReactDOM.unstable_createRoot(document.getElementById('root')).render(<App
+  client={client}
+  authz={authz}
+  routes={createRoutes(routes)()}
+  theme={theme} />);
+
+// ReactDOM.render(
+//   <App
+//     client={client}
+//     authz={authz}
+//     routes={createRoutes(routes)()}
+//     theme={theme} />,
+//   document.getElementById('root'),
+// );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

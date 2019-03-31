@@ -8,11 +8,11 @@ import Typography from './ArticleGalleryTypography';
 const LayoutBody = ({children}) => children;
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 8,
-    marginBottom: theme.spacing.unit * 4,
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(4),
   },
   images: {
-    marginTop: theme.spacing.unit * 8,
+    marginTop: theme.spacing(8),
     display: 'flex',
     flexWrap: 'wrap',
   },

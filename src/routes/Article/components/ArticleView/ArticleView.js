@@ -30,7 +30,7 @@ export const ArticleView = ({
   params: {articleId},
   ...restProps
 }) => (
-  <Grid container spacing={16}>
+  <Grid container spacing={8}>
     <Grid item xs={6}>
       <Suspense>
         <Switch>

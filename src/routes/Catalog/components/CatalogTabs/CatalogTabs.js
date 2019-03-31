@@ -24,7 +24,7 @@ export const CatalogTabs = ({
 
   const tabClasess = {
     wrapper: classes.tabWrapper,
-    labelContainer: classes.tabLabelContainer,
+    // labelContainer: classes.tabLabelContainer,
   };
 
   return (

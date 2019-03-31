@@ -1,1 +1,1 @@
-export { default } from './Suspense';
+export { default, withSuspense } from './Suspense';

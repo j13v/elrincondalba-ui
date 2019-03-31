@@ -17,9 +17,9 @@ export default theme => ({
     marginRight: 20,
   },
   toolbar: {
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(theme.breakpoints.values.lg + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(theme.breakpoints.values.lg + theme.spacing(3 * 2))]: {
       width: theme.breakpoints.values.lg,
       marginLeft: 'auto',
       marginRight: 'auto',

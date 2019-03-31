@@ -15,7 +15,7 @@ const Footer = (props) => {
   return (
     <div className={classes.root}>
       <div className={classes.main}>
-        <Grid container spacing={40}>
+        <Grid container spacing={8}>
 
           <Grid item xs={4} sm={4} md={4} className={classes.links}>
               Enlaces
@@ -46,7 +46,7 @@ const Footer = (props) => {
               direction="column"
               justify="flex-end"
               className={classes.iconsWrapper}
-              spacing={16}
+              spacing={8}
             >
               <Grid item className={classes.icons}>
                 <a href="https://www.instagram.com/elrincondalba/?hl=es" title="Instagram" className={classes.icon}>

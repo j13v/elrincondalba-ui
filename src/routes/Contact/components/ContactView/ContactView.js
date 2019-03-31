@@ -5,7 +5,7 @@ import Map from '@global/components/Map';
 import ContactForm from '../ContactForm';
 
 export const ContactView = ({createOrder}) => (
-  <Grid container spacing={32}>
+  <Grid container spacing={8}>
     <Grid item xs={6}>
       <h2>Contacta con nosotros</h2>
       <ContactForm onRequest={console.log} stock="5c60366cc71df142684d8541" />

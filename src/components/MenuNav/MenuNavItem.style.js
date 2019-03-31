@@ -1,7 +1,7 @@
 export default theme => ({
   root: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
   },
   link: {
     textTransform: 'uppercase',

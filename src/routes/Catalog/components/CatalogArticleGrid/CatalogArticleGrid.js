@@ -58,7 +58,7 @@ export const CatalogArticleGrid = ({
   });
 
   return (
-    <Grid container spacing={16}>
+    <Grid container spacing={8}>
       {flattenEdges(articles).map((article, key) => (
         <CatalogArticleGridItem key={article.id} routing={routing} {...article} />
       ))}
