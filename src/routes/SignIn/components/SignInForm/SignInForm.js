@@ -18,9 +18,8 @@ import styles from './SignInForm.style';
 
 
 const GET_ACCESS_TOKEN = gql`
-mutation($email: String!, $signature: String!){
+mutation($signature: String!){
   getAccessToken(
-    email: $email,
     signature: $signature
   )
 }
@@ -47,6 +46,9 @@ export const SignInForm = ({
   };
 
   const handleSignIn = () => {
+    if (!process.env.REACT_APP_SECRET) {
+      throw new Error('REACT_APP_SECRET is not provider');
+    }
     const key = process.env.REACT_APP_SECRET;
     const {email, password} = state;
     const signature = require('crypto').createHmac('sha256', key)
@@ -55,7 +57,6 @@ export const SignInForm = ({
 
     getAuthToken({
       variables: {
-        email,
         signature,
       },
     }).then(({
