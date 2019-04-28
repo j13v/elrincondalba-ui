@@ -1,5 +1,7 @@
 export { capitalize } from '@material-ui/core/utils/helpers';
 
+export { default as debounce } from 'lodash.debounce';
+
 export const urlFormat = (url, params = {}) => url.replace(/:([a-z_0-9]+)/ig, (match, paramName) => params[paramName]);
 
 export const parseHistoryStack = stack => stack
