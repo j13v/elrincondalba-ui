@@ -80,6 +80,13 @@ export const ArticleGallery = ({
   );
 };
 
+
+ArticleGallery.propTypes = {
+  articleId: PropTypes.string.isRequired,
+  classes: PropTypes.string.isRequired,
+  suspend: PropTypes.bool,
+};
+
 ArticleGallery.defaultProps = {
   suspend: true,
 };
