@@ -84,7 +84,7 @@ const CatalogFiltersPriceRange = ({
       </div>
       <Slider
         valueReducer={valueReducer}
-        step={10}
+        // step={10}
         min={priceRangeMin}
         max={priceRangeMax}
         {...restProps} />

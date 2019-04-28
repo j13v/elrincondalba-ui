@@ -46,7 +46,7 @@ const CatalogFiltersSizes = ({
     <FormControl component="fieldset">
       <FormGroup row>
         {
-        listArticleSizes.map(({name}, idx) => (
+        listArticleSizes.map(({name, count}, idx) => (
           <FormControlLabel
             style={{
               width: '50%',
@@ -59,6 +59,7 @@ const CatalogFiltersSizes = ({
                 color="primary"
                 checked={isChecked(sizes, name)}
                 onChange={onChange}
+                disabled={count === 0}
                 value={name} />)}
             label={name.toUpperCase()} />
         ))}

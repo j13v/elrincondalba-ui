@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuerystringState } from '@global/hooks';
+import { debounce } from '@global/utils/helpers';
 import CatalogFiltersCategories from './CatalogFiltersCategories';
 import CatalogFiltersSizes from './CatalogFiltersSizes';
 import CatalogFiltersPriceRange from './CatalogFiltersPriceRange';
@@ -12,7 +13,7 @@ const MAP_STATE_KEYS = {
   sizes: 'tallas',
 };
 
-const parseArray = value => value.split(',').filter(Boolean);
+const parseArray = value => value.replace(/^\[/, '').replace(/\]$/, '').split(',').filter(Boolean);
 const parseFloatArray = value => parseArray(value).map(parseFloat);
 const stringifyArray = value => value.join(',');
 
@@ -38,19 +39,23 @@ const toggleValue = (data, value) => {
 
 const getValueFromObject = (map, key, value) => (map[key] ? map[key](value) : value);
 
+const stringifyQsState = (value, key) => getValueFromObject(MAP_STRINGIFY_STATE_KEYS, key, value);
+const parseQsState = (value, key) => getValueFromObject(MAP_PARSE_STATE_KEYS, key, value);
+const useQsState = () => useQuerystringState({
+  categories: [],
+  sizes: [],
+  priceRange: [],
+}, {
+  keys: MAP_STATE_KEYS,
+  stringify: stringifyQsState,
+  parse: parseQsState,
+});
+
 export const CatalogFilters = ({
   onChange,
   suspend,
 }) => {
-  const [state, setState] = useQuerystringState({
-    categories: [],
-    sizes: [],
-    priceRange: [],
-  }, {
-    keys: MAP_STATE_KEYS,
-    stringify: (value, key) => getValueFromObject(MAP_STRINGIFY_STATE_KEYS, key, value),
-    parse: (value, key) => getValueFromObject(MAP_PARSE_STATE_KEYS, key, value),
-  });
+  const [state, setState] = useQsState();
 
   const handleChange = name => (evt) => {
     const newState = {
@@ -76,9 +81,9 @@ export const CatalogFilters = ({
       <CatalogFiltersPriceRange
         onChange={(evt, value) => setState({
           ...state,
-          priceRange: [value],
+          priceRange: [0, value],
         })}
-        value={state.priceRange[0]} />
+        value={state.priceRange[1]} />
     </div>
   );
 };
