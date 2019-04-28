@@ -45,9 +45,8 @@ export const ArticleGallery = ({
   const classes = useStyles(restProps);
   const {
     data: {
-      getArticle: {images: articleImages},
+      getArticle: { images: articleImages },
     },
-    error,
   } = useQuery(GET_ARTICLE_IMAGES_BY_ID, {variables: {articleId}, suspend});
 
   const [selectedImage, setSelectedImage] = useState(articleImages.length ? 0 : -1);
@@ -79,6 +78,10 @@ export const ArticleGallery = ({
       </Grid>
     </Grid>
   );
+};
+
+ArticleGallery.defaultProps = {
+  suspend: true,
 };
 
 export default ArticleGallery;
