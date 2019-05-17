@@ -11,26 +11,31 @@ import { useQuery } from '@global/hooks';
 import {ROUTING_ARTICLE} from '@global/constants/routing';
 import Suspense from '@global/components/Suspense';
 import CatalogFilters from '../CatalogFilters';
-import CatalogTabs from '../CatalogTabs';
+import CatalogSorting from '../CatalogSorting';
 import CatalogArticleGrid from '../CatalogArticleGrid';
 
 
 export const CatalogView = (props) => {
   const [filters, setFilters] = useState({});
+  const [sorting, setSorting] = useState();
 
-  const handleChange = (_, filters) => {
+  const handleFiltersChange = (_, filters) => {
     setFilters(filters);
+  };
+
+  const handleSortingChange = (_, sorting) => {
+    setSorting(sorting.name);
   };
 
   return (
     <Grid container spacing={2} direction="row" style={{marginTop: '1em'}}>
       <Grid item xs={12} md={3}>
-        <CatalogFilters onChange={handleChange} />
+        <CatalogFilters onChange={handleFiltersChange} />
       </Grid>
       <Grid item sm={12} md={9}>
-        <CatalogTabs style={{paddingBottom: '1rem'}} />
+        <CatalogSorting onChange={handleSortingChange} style={{paddingBottom: '1rem'}} />
         <Suspense>
-          <CatalogArticleGrid filters={filters} routing={ROUTING_ARTICLE} />
+          <CatalogArticleGrid filters={filters} sorting={sorting} routing={ROUTING_ARTICLE} />
         </Suspense>
       </Grid>
     </Grid>

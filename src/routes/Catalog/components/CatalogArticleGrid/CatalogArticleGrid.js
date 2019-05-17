@@ -12,12 +12,14 @@ const FETCH_CATALOG_DATA = gql`
 query getCatalog(
   $categories: [String],
   $priceRange: [Float],
-  $sizes: [String]
+  $sizes: [String],
+  $sorting: ArticleSortingEnum,
 ) {
   listArticles(
     categories: $categories
     priceRange: $priceRange
-    sizes: $sizes
+    sizes: $sizes,
+    sorting: $sorting,
   ) {
     edges {
       node {
@@ -45,6 +47,7 @@ export const CatalogArticleGrid = ({
   suspend,
   routing,
   filters,
+  sorting,
 }) => {
   const {
     data: {
@@ -53,6 +56,7 @@ export const CatalogArticleGrid = ({
   } = useQuery(FETCH_CATALOG_DATA, {
     variables: {
       ...filters,
+      sorting,
     },
     suspend,
   });
